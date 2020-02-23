@@ -160,7 +160,7 @@ void MainWindow::on_MailWhu_clicked()    //点击武大邮箱
     //这是我的个人信息，为了不用每次输入
     ui->mailAddress->setText("2017301390114@whu.edu.cn");
     ui->userName->setText("2017301390114");
-    ui->passWord->setText("2833486-MM");
+    ui->passWord->setText("789456-KK");
 }
 
 void MainWindow::on_toMainPage_clicked()    //主页按钮
