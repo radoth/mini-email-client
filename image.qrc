@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>image/background.jpg</file>
+        <file>image/mail.png</file>
+        <file>image/user.png</file>
+        <file>image/reply.png</file>
+        <file>image/refresh.png</file>
+        <file>image/next.png</file>
+        <file>image/delete.png</file>
+        <file>image/draft.png</file>
+        <file>image/send.png</file>
+        <file>image/close.png</file>
+        <file>image/back.png</file>
+        <file>image/toWrite.png</file>
+        <file>image/trash.png</file>
+    </qresource>
+    <qresource prefix="/"/>
+</RCC>
