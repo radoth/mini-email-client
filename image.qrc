@@ -13,6 +13,10 @@
         <file>image/back.png</file>
         <file>image/toWrite.png</file>
         <file>image/trash.png</file>
+        <file>image/previous.png</file>
+        <file>image/circleNext.png</file>
+        <file>image/get.png</file>
+        <file>image/cc.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

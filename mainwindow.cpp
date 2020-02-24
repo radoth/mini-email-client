@@ -7,7 +7,14 @@
 #include<QDebug>
 #include"smtp.h"
 #include<QMessageBox>
+#include <QCloseEvent>
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
 
+void MainWindow::closeEvent(QCloseEvent *event) //关闭窗口事件
+{
+
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -77,9 +84,37 @@ MainWindow::MainWindow(QWidget *parent)
     QIcon icon13;
     icon13.addFile(":/new/prefix1/image/back.png");
     ui->back_3->setIcon(icon13);
+
+    QIcon icon14;
+    icon14.addFile(":/new/prefix1/image/previous.png");
+    ui->previousLetter->setIcon(icon14);
+
+    QIcon icon15;
+    icon15.addFile(":/new/prefix1/image/circleNext.png");
+    ui->nextHello->setIcon(icon15);
+
+    QIcon icon16;
+    icon16.addFile(":/new/prefix1/image/circleNext.png");
+    ui->nextSMTP->setIcon(icon16);
+
+    QIcon icon17;
+    icon17.addFile(":/new/prefix1/image/circleNext.png");
+    ui->nextPOP3->setIcon(icon17);
+
+    QIcon icon18;
+    icon18.addFile(":/new/prefix1/image/get.png");
+    ui->toMainPage->setIcon(icon18);
+
+    QIcon icon19;
+    icon19.addFile(":/new/prefix1/image/cc.png");
+    ui->addCC->setIcon(icon19);
+
     //QTreeWidgetItem *item4=new QTreeWidgetItem(ui->mailList);
     //ui->mailList->setItemWidget(item4,0,createItem("不爱","分隔板","22"));
 
+    animation(ui->logo);
+    animation(ui->label);
+    animation(ui->label_2);
 
 }
 
@@ -248,6 +283,22 @@ cout<<"error occured!";
     }
 }
 
+void MainWindow::animation(QWidget *o)
+{
+    QGraphicsOpacityEffect * m_pGraphicsOpacityEffect1=new QGraphicsOpacityEffect(o);
+        m_pGraphicsOpacityEffect1->setOpacity(0);
+        o->setGraphicsEffect(m_pGraphicsOpacityEffect1);
+
+    QPropertyAnimation *anime3=new QPropertyAnimation(m_pGraphicsOpacityEffect1,"opacity");
+        anime3->setDuration(2000);
+        anime3->setStartValue(0);
+        //anime3->setKeyValueAt(0.5,1);
+        anime3->setEndValue(1);
+        anime3->setEasingCurve(QEasingCurve::OutSine);
+        anime3->setLoopCount(1);
+        anime3->start();
+}
+
 
 void MainWindow::on_mailList_itemDoubleClicked(QTreeWidgetItem *item, int column)    //双击查看一封信
 {    //用户双击一封信，查找该邮件的id
@@ -255,6 +306,7 @@ void MainWindow::on_mailList_itemDoubleClicked(QTreeWidgetItem *item, int column
     QList<QLabel *> labelList = now->findChildren<QLabel *>();
     auto id=labelList[1]->text();
     qDebug()<<id;
+    currentLetter=id.toStdString();
     displayLetter(id);    //显示id的信
 }
 
@@ -273,6 +325,7 @@ void MainWindow::displayLetter(QString id)    //显示一封信
             ui->ReadRecv->setText(QString::fromLocal8Bit((*i).to.c_str()));
             ui->ReadContent->setText(QString::fromLocal8Bit((*i).content.c_str()));
             ui->stackedWidget->setCurrentIndex(6);
+            currentLetter=id.toStdString();
             break;
         }
 
@@ -472,4 +525,25 @@ void MainWindow::on_back_3_clicked()    //返回按钮
         ui->mailList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
     }
     ui->stackedWidget->setCurrentIndex(5);    //切换页面
+}
+
+void MainWindow::on_nextLetter_clicked()        //下一封
+{
+    displayLetter(QString::number(stoi(currentLetter)+1));
+}
+
+void MainWindow::on_previousLetter_clicked()        //上一封
+{
+    displayLetter(QString::number(stoi(currentLetter)-1));
+}
+
+void MainWindow::on_close_clicked()     //右上角按钮
+{
+    close();
+}
+
+void MainWindow::on_addCC_clicked()
+{
+    ui->addCC->hide();
+    ui->hideFrame->hide();
 }
