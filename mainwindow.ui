@@ -39,7 +39,7 @@ background-color: rgb(255, 255, 255);
 </string>
    </property>
    <property name="currentIndex">
-    <number>7</number>
+    <number>9</number>
    </property>
    <widget class="QWidget" name="welcome">
     <property name="styleSheet">
@@ -1476,7 +1476,7 @@ border-image: url(:/new/prefix1/image/user.png);</string>
     </widget>
     <widget class="QTextEdit" name="ReadContent">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
@@ -1551,6 +1551,9 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
 QTextEdit{
 border:none;
 }</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
      <property name="html">
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -2592,6 +2595,129 @@ background:transparent;
       <size>
        <width>24</width>
        <height>24</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="remember">
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+                   background-color:rgb(0, 120, 215);
+	
+border:plain;
+border-width:4px;
+	border-color: rgb(0, 0, 0);
+    
+	font: 75 15pt &quot;微软雅黑&quot;;
+                   color:rgba(255,255,255,255);          
+                   padding:6px;                 
+                   }
+                   
+                   QPushButton:pressed{
+                   background-color:rgb(0, 120, 215);	
+border:none;
+    
+	font: 75 15pt &quot;微软雅黑&quot;;
+                   color:rgba(255,255,255,255);          
+                   padding:6px;
+                   }
+                  
+                   QPushButton:hover{
+                   background-color:rgba(0, 120, 215,180);
+border:none;
+    
+	font: 75 15pt &quot;微软雅黑&quot;;
+                   color:rgba(255,255,255,255);          
+                   padding:6px;
+                   }
+</string>
+    </property>
+    <widget class="QLabel" name="label_25">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>120</y>
+       <width>511</width>
+       <height>371</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255, 255, 255,150);
+border:2px solid grey;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_26">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>140</y>
+       <width>511</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#000000;&quot;&gt;选择账户&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="accountList">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>180</y>
+       <width>471</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QListView::item{
+          height:36px;
+	font: 12pt &quot;微软雅黑&quot;;
+
+ }
+background-color:rgba(0, 120, 215,180);</string>
+     </property>
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <property name="viewMode">
+      <enum>QListView::ListMode</enum>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="newAccount">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>430</y>
+       <width>221</width>
+       <height>43</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>新账户</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
       </size>
      </property>
     </widget>

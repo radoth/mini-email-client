@@ -17,6 +17,7 @@
         <file>image/circleNext.png</file>
         <file>image/get.png</file>
         <file>image/cc.png</file>
+        <file>image/account.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

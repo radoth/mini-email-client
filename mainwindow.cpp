@@ -11,6 +11,7 @@
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
 
+
 void MainWindow::closeEvent(QCloseEvent *event) //关闭窗口事件
 {
 
@@ -109,6 +110,10 @@ MainWindow::MainWindow(QWidget *parent)
     icon19.addFile(":/new/prefix1/image/cc.png");
     ui->addCC->setIcon(icon19);
 
+    QIcon icon20;
+    icon20.addFile(":/new/prefix1/image/account.png");
+    ui->newAccount->setIcon(icon20);
+
     //QTreeWidgetItem *item4=new QTreeWidgetItem(ui->mailList);
     //ui->mailList->setItemWidget(item4,0,createItem("不爱","分隔板","22"));
 
@@ -116,12 +121,26 @@ MainWindow::MainWindow(QWidget *parent)
     animation(ui->label);
     animation(ui->label_2);
 
+    loadAccount();
+}
+
+void MainWindow::loadAccount()//数据库读取
+{
+    account.createConnection();
+    QVector<Remember> temp=account.queryAll();
+    accountResult=temp;
+
+    for(QVector<Remember>::iterator i=temp.begin();i!=temp.end();i++)
+    {
+        ui->accountList->addItem((*i).mailAdd);
+    }
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
@@ -181,7 +200,7 @@ QWidget *MainWindow::createItem(QString title, QString content,QString num)
 
 void MainWindow::on_nextHello_clicked()    //点击下一步
 {
-    ui->stackedWidget->setCurrentIndex(1);
+    ui->stackedWidget->setCurrentIndex(9);
 }
 
 void MainWindow::on_MailWhu_clicked()    //点击武大邮箱
@@ -193,9 +212,9 @@ void MainWindow::on_MailWhu_clicked()    //点击武大邮箱
     ui->stackedWidget->setCurrentIndex(4);
 
     //这是我的个人信息，为了不用每次输入
-    ui->mailAddress->setText("2017301390114@whu.edu.cn");
-    ui->userName->setText("2017301390114");
-    ui->passWord->setText("789456-KK");
+    //ui->mailAddress->setText("2017301390114@whu.edu.cn");
+    //ui->userName->setText("2017301390114");
+    //ui->passWord->setText("789456-KK");
 }
 
 void MainWindow::on_toMainPage_clicked()    //主页按钮
@@ -230,6 +249,10 @@ void MainWindow::on_UpdateDone()    //在更新邮件操作完成后
         ui->mailList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
     }
     QMessageBox::information(NULL, "提示.", "刷新成功     .");
+
+    //下面写入数据库
+    account.insert(QString::fromStdString(mailAddress),QString::fromStdString(userName),QString::fromStdString(password),QString::fromStdString(smtpServer),stoi(smtpPort.c_str()),QString::fromStdString(pop3Server),stoi(pop3Port.c_str()));
+
 }
 
 void MainWindow::on_UpdateStart()    //更新开始
@@ -546,4 +569,39 @@ void MainWindow::on_addCC_clicked()
 {
     ui->addCC->hide();
     ui->hideFrame->hide();
+}
+
+void MainWindow::on_accountList_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString choose=item->text();
+    for(QVector<Remember>::iterator i=accountResult.begin();i!=accountResult.end();i++)
+    {
+        if((*i).mailAdd==choose)
+        {
+            smtpServer=(*i).smtpServer.toStdString();
+            smtpPort=QString::number((*i).smtpPort).toStdString();
+            pop3Server=(*i).pop3Server.toStdString();
+            pop3Port=QString::number((*i).pop3Port).toStdString();
+            mailAddress=(*i).mailAdd.toStdString();
+            userName=(*i).userName.toStdString();
+            password=(*i).password.toStdString();
+
+            ui->smtpServer->setText(QString::fromStdString(smtpServer));
+            ui->smtpPort->setText(QString::fromStdString(smtpPort));
+            ui->pop3Server->setText(QString::fromStdString(pop3Server));
+            ui->pop3Port->setText(QString::fromStdString(pop3Port));
+            ui->mailAddress->setText(QString::fromStdString(mailAddress));
+            ui->userName->setText(QString::fromStdString(userName));
+            ui->passWord->setText(QString::fromStdString(password));
+
+            ui->stackedWidget->setCurrentIndex(4);
+            break;
+        }
+    }
+
+}
+
+void MainWindow::on_newAccount_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
 }

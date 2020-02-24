@@ -1,9 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include "database.h"
 #include <QWidget>
 #include"readLetter.h"
 #include<QTreeWidgetItem>
+#include<QListWidgetItem>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -35,9 +36,12 @@ string userName;      //用户名
 string password;      //密码
 vector<readLetterSimple> allLetter;      //所有邮件的全部信息，一个readLetterSimple类包含一封邮件
 string currentLetter;           //指示当前页面显示的信的编号
+DataBase account;           //存储用户信息的数据库
+QVector<Remember> accountResult;        //所有用户信息
 
 void displayLetter(QString id);      //在邮件列表里显示一封信
 void removeLetter(QString id);      //在邮件列表里删除一封信
+void loadAccount();
 private slots:
     void on_nextHello_clicked();
 
@@ -86,6 +90,10 @@ private slots:
     void on_close_clicked();
 
     void on_addCC_clicked();
+
+    void on_accountList_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_newAccount_clicked();
 
 private:
     Ui::MainWindow *ui;

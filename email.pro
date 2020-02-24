@@ -1,4 +1,5 @@
 QT       += core gui
+QT       += sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,6 +21,7 @@ LIBS += -lWs2_32
 
 SOURCES += \
     base64.cpp \
+    database.cpp \
     main.cpp \
     mainwindow.cpp \
     pop3.cpp \
@@ -30,6 +32,7 @@ SOURCES += \
 
 HEADERS += \
     base64.h \
+    database.h \
     mainwindow.h \
     pop3.h \
     readLetter.h \
