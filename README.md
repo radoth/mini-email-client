@@ -17,15 +17,11 @@ E-Mail 客户端使用 Qt 编写，遵循 UI 与业务逻辑分离的设计原�
 ### 主要模块
 
 - 套接字模块：调用 Winsock2 库，使用 Windows 提供的 API 负责套接字连接，该模块屏蔽操作系统 API 细节，向上提供统一的套接字收发服务，为下一步跨系统移植做准备。对应 sock.h 和 sock.cpp。
-
 - SMTP模块：调用套接字模块，用户输入 SMTP 服务器、用户名、密码、邮件内容等，该模块提供发邮件服务。对应 smtp.h 和smtp.cpp。
-
 - POP3模块：调用套接字模块，用户输入 POP3 服务器、用户名和密码等，该模块提供收取邮件服务。 pop3.h 和 pop3.cpp 提供了 POP3 服务提供的基本服务，update.cpp 建立一个独立的线程，并收取所有邮件。
-
 - BASE 64模块：输入一串文本，输出 BASE 64 加密后的结果。 SMTP 登录时调用。对应 base64.h 和 base64.cpp。
-
+- 数据库模块：提供基于 sqlite3 的数据库支持，向上提供插入、查询等数据库服务。对应 database.h 和 database.cpp 。
 - 邮件阅读模块：调用 POP3 模块，能返回包含邮件头和邮件体的字符串，该模块分析这些字符串，输出收发件人、邮件主题和邮件正文等。对应 readletter.h 和 readletter.cpp。
-
 - GUI ：图形用户界面模块。mainwindow.h 和 mainwindow.cpp 对应于主窗口，用 QStackWidget 切换不同的界面。
 
 ### 文件组织
@@ -33,6 +29,8 @@ E-Mail 客户端使用 Qt 编写，遵循 UI 与业务逻辑分离的设计原�
 项目目录
 │  base64.cpp	-- base64 编码
 │  base64.h	
+│  database.h	-- 数据库
+│  database.cpp	
 │  email.pro	-- 项目文件
 │  email.pro.user	-- 项目文件配置
 │  image.qrc	-- 图标资源
