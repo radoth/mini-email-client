@@ -27,42 +27,42 @@ E-Mail 客户端使用 Qt 编写，遵循 UI 与业务逻辑分离的设计原�
 ### 文件组织
 
 项目目录
-│  base64.cpp	-- base64 编码
-│  base64.h	
-│  database.h	-- 数据库
-│  database.cpp	
-│  email.pro	-- 项目文件
-│  email.pro.user	-- 项目文件配置
-│  image.qrc	-- 图标资源
-│  main.cpp	-- 程序入口
-│  mainwindow.cpp	-- 主窗口
-│  mainwindow.h	
-│  mainwindow.ui	-- 主窗口gui
-│  pop3.cpp	-- POP3服务
-│  pop3.h	
-│  readLetter.cpp	-- 解析 pop3 读信时返回的字符串，分析出标题、正文等
-│  readLetter.h
-│  smtp.cpp	-- smtp 服务
-│  smtp.h
-│  sock.cpp	-- 套接字服务
-│  sock.h
-│  update.cpp 	-- 调用pop3服务，获取邮箱里所有的信
-│  update.h
+│  base64.cpp	-- base64 编码  
+│  base64.h	  
+│  database.h	-- 数据库  
+│  database.cpp	  
+│  email.pro	-- 项目文件  
+│  email.pro.user	-- 项目文件配置  
+│  image.qrc	-- 图标资源  
+│  main.cpp	-- 程序入口  
+│  mainwindow.cpp	-- 主窗口  
+│  mainwindow.h	  
+│  mainwindow.ui	-- 主窗口gui  
+│  pop3.cpp	-- POP3服务  
+│  pop3.h	  
+│  readLetter.cpp	-- 解析 pop3 读信时返回的字符串，分析出标题、正文等  
+│  readLetter.h  
+│  smtp.cpp	-- smtp 服务  
+│  smtp.h  
+│  sock.cpp	-- 套接字服务  
+│  sock.h  
+│  update.cpp 	-- 调用pop3服务，获取邮箱里所有的信  
+│  update.h  
 │  
-└─image	-- 图片
-​        back.png
-​        background.jpg
-​        close.png
-​        delete.png
-​        draft.png
-​        mail.png
-​        next.png
-​        refresh.png
-​        reply.png
-​        send.png
-​        toWrite.png
-​        trash.png
-​        user.png
+└─image	-- 图片  
+        back.png  
+        background.jpg  
+        close.png  
+        delete.png  
+        draft.png  
+        mail.png  
+        next.png  
+        refresh.png  
+        reply.png  
+        send.png  
+        toWrite.png  
+        trash.png  
+        user.png     
 
 ## 开发规范细节
 
