@@ -124,6 +124,13 @@ MainWindow::MainWindow(QWidget *parent)
     loadAccount();
 }
 
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+
+/*----------------数据库读取-------------*/
 void MainWindow::loadAccount()//数据库读取
 {
     account.createConnection();
@@ -136,11 +143,9 @@ void MainWindow::loadAccount()//数据库读取
     }
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
 
+
+/*------------------鼠标拖动窗口----------*/
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {

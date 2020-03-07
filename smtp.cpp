@@ -1,218 +1,220 @@
 #include "smtp.h"
 
-bool SendMail::sendMail(Mail my)    //·¢ËÍÒ»·âÓÊ¼ş
+bool SendMail::sendMail(Mail my)    //å‘é€ä¸€å°é‚®ä»¶
 {
-	try {
-		cout << "ÕıÔÚ·¢ËÍ......" << endl;
-		sendAMail(my);
-		cout << "·¢ËÍ³É¹¦£¡" << endl;
-		return true;
-	}
-	catch (int err)
-	{
-		cout << "·¢ËÍÊ§°Ü¡£" << endl;
-		cout << "´íÎó´úÂë£º" << err << " " << endl;
-		/*switch (err)
-		{
-		case 0:cout << "´íÎó 0£ºÎŞ·¨½âÎö·şÎñÆ÷" << endl; break;
-		case 1:cout << "´íÎó 1£º·şÎñÆ÷ÎŞ·¨Á¬½Ó" << endl; break;
-		case 2:cout << "´íÎó 2£º½¨Á¢Á¬½ÓÊ§°Ü" << endl; break;
-		case 3:cout << "´íÎó 3£ºÎÊºòÊ§°Ü" << endl; break;
-		case 4:cout << "´íÎó 4£ºÎŞ·¨µÇÂ¼" << endl; break;
-		case 5:cout << "´íÎó 5£ºÓÃ»§Ãû´íÎó" << endl; break;
-		case 6:cout << "´íÎó 6£ºÓÃ»§Ãû»òÃÜÂë´íÎó" << endl; break;
-		case 7:cout << "´íÎó 7£º·¢¼şÈË´íÎó" << endl; break;
-		case 8:cout << "´íÎó 8£ºÊÕ¼şÈËµØÖ·´íÎó" << endl; break;
-		case 9:cout << "´íÎó 9£ºÇëÇó´«ËÍÕıÎÄÊ±´íÎó¡£" << endl; break;
-		case 10:cout << "´íÎó 10£º·¢ËÍÕıÎÄÊ§°Ü" << endl; break;
-		default:cout << "Î´Öª´íÎó¡£" << endl; break;
-		}*/
-		return false;
-	}
-	
+    try {
+        cout << "æ­£åœ¨å‘é€......" << endl;
+        sendAMail(my);
+        cout << "å‘é€æˆåŠŸï¼" << endl;
+        return true;
+    }
+
+    catch(int err)
+    {
+        cout<<"å‘é€é”™è¯¯ï¼"<<endl;
+        cout<<"é”™è¯¯ä»£ç : "<<err<<endl;
+        /*switch (err)
+        {
+        case 0:cout << "é”™è¯¯ 0ï¼šæ— æ³•è§£ææœåŠ¡å™¨" << endl; break;
+        case 1:cout << "é”™è¯¯ 1ï¼šæœåŠ¡å™¨æ— æ³•è¿æ¥" << endl; break;
+        case 2:cout << "é”™è¯¯ 2ï¼šå»ºç«‹è¿æ¥å¤±è´¥" << endl; break;
+        case 3:cout << "é”™è¯¯ 3ï¼šé—®å€™å¤±è´¥" << endl; break;
+        case 4:cout << "é”™è¯¯ 4ï¼šæ— æ³•ç™»å½•" << endl; break;
+        case 5:cout << "é”™è¯¯ 5ï¼šç”¨æˆ·åé”™è¯¯" << endl; break;
+        case 6:cout << "é”™è¯¯ 6ï¼šç”¨æˆ·åæˆ–å¯†ç é”™è¯¯" << endl; break;
+        case 7:cout << "é”™è¯¯ 7ï¼šå‘ä»¶äººé”™è¯¯" << endl; break;
+        case 8:cout << "é”™è¯¯ 8ï¼šæ”¶ä»¶äººåœ°å€é”™è¯¯" << endl; break;
+        case 9:cout << "é”™è¯¯ 9ï¼šè¯·æ±‚ä¼ é€æ­£æ–‡æ—¶é”™è¯¯ã€‚" << endl; break;
+        case 10:cout << "é”™è¯¯ 10ï¼šå‘é€æ­£æ–‡å¤±è´¥" << endl; break;
+        default:cout << "æœªçŸ¥é”™è¯¯ã€‚" << endl; break;
+        }*/
+        return false;
+    }
+
+
 }
 
 void SendMail::sendAMail(Mail my)
 {
-	Sock mysock;
-    int resCode;        //½¨Á¢Á¬½Ó
-	if (mysock.connectSocket(my.hostID.c_str(), my.port) == false)
-		throw 2;//½¨Á¢Á¬½ÓÊ§°Ü
-
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-
-    string helo("HELO ");    //ÎÊºò
-	helo = helo + my.localName + "\r\n";
-	mysock.sendSocket(helo.c_str());
-
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
-
-    string login("AUTH LOGIN\r\n");    //ÇëÇóµÇÂ¼
-	mysock.sendSocket(login.c_str());
-
-	//cout << "login" << endl;
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
-	//if (resCode != 334)
-		//throw 4;
-
-	string usernameBase64=base64_encode(reinterpret_cast<const unsigned char*>(my.username.c_str()), my.username.length());
-    mysock.sendSocket(usernameBase64.c_str());    //ÓÃ»§Ãû
-	mysock.sendSocket("\r\n");
-
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
-	//if (resCode != 334)
-		//throw 5;
-
-	string passwordBase64= base64_encode(reinterpret_cast<const unsigned char*>(my.password.c_str()), my.password.length());
-    mysock.sendSocket(passwordBase64.c_str());        //ÃÜÂë
-	mysock.sendSocket("\r\n");
-
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
-	//if (resCode != 235)
-		//throw 6;
-
-    mysock.sendSocket("MAIL FROM:<");    //·¢ËÍ·¢¼şÈË
-	mysock.sendSocket(my.mailFrom.c_str());
-	mysock.sendSocket(">");
-	mysock.sendSocket("\r\n");
-
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
-	//if (resCode != 250)
-		//throw 7;
-
-	mysock.sendSocket("RCPT TO:<");
-    mysock.sendSocket(my.mailTo.c_str());    //·¢ËÍÊÕ¼şÈË
-	mysock.sendSocket(">");
-	mysock.sendSocket("\r\n");
-
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
-	//if (resCode != 250)
-		//throw 8;
-
-    mysock.sendSocket("DATA\r\n");    //·¢ËÍÊı¾İ
-
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
-	//if (resCode != 354)
-		//throw 9;
-
-    string all = generateSimpleHead(my);    //Éú³ÉĞÅÍ·
-    all = all +"\r\n\r\n"+ my.content + "\r\n";
-
-    mysock.sendSocket(all.c_str());    //·¢ËÍÊı¾İ
-	mysock.sendSocket(".\r\n");
+    Sock mysock;
+    int resCode;        //å»ºç«‹è¿æ¥
+    if (mysock.connectSocket(my.hostID.c_str(), my.port) == false)
+        throw 2;//å»ºç«‹è¿æ¥å¤±è´¥
 
     resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
-	//if (resCode != 250)
-		//throw 10;
+    //cout << resCode << endl;
 
-    mysock.sendSocket("QUIT\r\n");    //ÍË³ö
+    string helo("HELO ");    //é—®å€™
+    helo = helo + my.localName + "\r\n";
+    mysock.sendSocket(helo.c_str());
 
-	resCode = getResponseCode(&mysock);
-	//cout << resCode << endl;
-	checkError(resCode);
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
+
+    string login("AUTH LOGIN\r\n");    //è¯·æ±‚ç™»å½•
+    mysock.sendSocket(login.c_str());
+
+    //cout << "login" << endl;
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
+    //if (resCode != 334)
+        //throw 4;
+
+    string usernameBase64=base64_encode(reinterpret_cast<const unsigned char*>(my.username.c_str()), my.username.length());
+    mysock.sendSocket(usernameBase64.c_str());    //ç”¨æˆ·å
+    mysock.sendSocket("\r\n");
+
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
+    //if (resCode != 334)
+        //throw 5;
+
+    string passwordBase64= base64_encode(reinterpret_cast<const unsigned char*>(my.password.c_str()), my.password.length());
+    mysock.sendSocket(passwordBase64.c_str());        //å¯†ç 
+    mysock.sendSocket("\r\n");
+
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
+    //if (resCode != 235)
+        //throw 6;
+
+    mysock.sendSocket("MAIL FROM:<");    //å‘é€å‘ä»¶äºº
+    mysock.sendSocket(my.mailFrom.c_str());
+    mysock.sendSocket(">");
+    mysock.sendSocket("\r\n");
+
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
+    //if (resCode != 250)
+        //throw 7;
+
+    mysock.sendSocket("RCPT TO:<");
+    mysock.sendSocket(my.mailTo.c_str());    //å‘é€æ”¶ä»¶äºº
+    mysock.sendSocket(">");
+    mysock.sendSocket("\r\n");
+
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
+    //if (resCode != 250)
+        //throw 8;
+
+    mysock.sendSocket("DATA\r\n");    //å‘é€æ•°æ®
+
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
+    //if (resCode != 354)
+        //throw 9;
+
+    string all = generateSimpleHead(my);    //ç”Ÿæˆä¿¡å¤´
+    all = all +"\r\n\r\n"+ my.content + "\r\n";
+
+    mysock.sendSocket(all.c_str());    //å‘é€æ•°æ®
+    mysock.sendSocket(".\r\n");
+
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
+    //if (resCode != 250)
+        //throw 10;
+
+    mysock.sendSocket("QUIT\r\n");    //é€€å‡º
+
+    resCode = getResponseCode(&mysock);
+    //cout << resCode << endl;
+    checkError(resCode);
 
 }
 
-void SendMail::checkError(int err)    //´íÎó´úÂë¼ì²é£¬´ıÍêÉÆ
+void SendMail::checkError(int err)    //é”™è¯¯ä»£ç æ£€æŸ¥ï¼Œå¾…å®Œå–„
 {
-	switch (err)
-	{
-	case 420:
-	case 421:
-	case 422:
-	case 431:
-	case 432:
-	case 441:
-	case 442:
-	case 446:
-	case 449:
-	case 450:
-	case 451:
-	case 452:
-	case 465:
-	case 471:
-	case 500:
-	case 502:
-	case 503:
-	case 504:
-	case 505:
-	case 510:
-	case 511:
-	case 512:
-	case 513:
-	case 523:
-	case 530:
-	case 541:
-	case 544:
-	case 550:
-	case 552:
-	case 553:
-	case 554:
-	case 571:throw err; break;
-	default:break;
-	}
+    switch (err)
+    {
+    case 420:
+    case 421:
+    case 422:
+    case 431:
+    case 432:
+    case 441:
+    case 442:
+    case 446:
+    case 449:
+    case 450:
+    case 451:
+    case 452:
+    case 465:
+    case 471:
+    case 500:
+    case 502:
+    case 503:
+    case 504:
+    case 505:
+    case 510:
+    case 511:
+    case 512:
+    case 513:
+    case 523:
+    case 530:
+    case 541:
+    case 544:
+    case 550:
+    case 552:
+    case 553:
+    case 554:
+    case 571:throw err; break;
+    default:break;
+    }
 }
 
-string SendMail::generateSimpleHead(Mail my)    //Éú³ÉĞÅÍ·
+string SendMail::generateSimpleHead(Mail my)    //ç”Ÿæˆä¿¡å¤´
 {
-	string from("From:");
-	from = from + my.mailFrom + "\r\n";
+    string from("From:");
+    from = from + my.mailFrom + "\r\n";
 
-	if (my.recv.empty())
-		my.recv = my.mailTo;
-	//Ä¬ÈÏÊÇmailto´¦µÄ·¢¼şÈË
+    if (my.recv.empty())
+        my.recv = my.mailTo;
+    //é»˜è®¤æ˜¯mailtoå¤„çš„å‘ä»¶äºº
 
-	string to("TO:");
-	to = to + my.recv + "\r\n";
+    string to("TO:");
+    to = to + my.recv + "\r\n";
 
-	string cc("");
-	if (!my.cc.empty())
-	{
-		cc = "Cc:" + my.cc + "\r\n";
-	}
+    string cc("");
+    if (!my.cc.empty())
+    {
+        cc = "Cc:" + my.cc + "\r\n";
+    }
 
-	string bcc("");
-	if (!my.bcc.empty())
-	{
-		bcc = "Bcc:" + my.bcc + "\r\n";
-	}
+    string bcc("");
+    if (!my.bcc.empty())
+    {
+        bcc = "Bcc:" + my.bcc + "\r\n";
+    }
 
-	string dat("");
-	//´ıÍêÉÆ
+    string dat("");
+    //å¾…å®Œå–„
 
-	string subject("");
-	if (!my.subject.empty())
-	{
-		subject = "Subject:" + my.subject + "\r\n";
-	}
+    string subject("");
+    if (!my.subject.empty())
+    {
+        subject = "Subject:" + my.subject + "\r\n";
+    }
 
-	return from + to + cc + bcc + dat + subject;
+    return from + to + cc + bcc + dat + subject;
 }
 
 int SendMail::getResponseCode(Sock * mySock)
 {
-	mySock->recvSocket();
-	char *result=mySock->getRecvBuffer();
-	string res(result);
-	//cout << res << endl;
-	//system("PAUSE");
-	return stoi(res.substr(0, 3), 0, 10);
-	
+    mySock->recvSocket();
+    char *result=mySock->getRecvBuffer();
+    string res(result);
+    //cout << res << endl;
+    //system("PAUSE");
+    return stoi(res.substr(0, 3), 0, 10);
+
 }

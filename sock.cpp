@@ -10,13 +10,13 @@ Sock::Sock()
 	WSADATA data;
 	if (WSAStartup(sockVersion, &data) != 0)
 	{
-		throw runtime_error("Ì×½Ó×Ö³õÊ¼»¯Ê§°Ü\n");
+		throw runtime_error("å¥—æ¥å­—åˆå§‹åŒ–å¤±è´¥\n");
 	}
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
 	{
-		throw runtime_error("Ì×½Ó×Ö³õÊ¼»¯Ê§°Ü\n");
+		throw runtime_error("å¥—æ¥å­—åˆå§‹åŒ–å¤±è´¥\n");
 	}
 }
 
@@ -26,7 +26,7 @@ bool Sock::connectSocket(const char * hostID, int port)
 	hp = gethostbyname(hostID);
 	if (hp == (struct hostent *)0)
 	{
-		throw 0;// "ÎŞ·¨½âÎö·şÎñÆ÷";
+		throw 0;// "æ— æ³•è§£ææœåŠ¡å™¨";
 		return false;
 	}
 	memcpy((char *)&server.sin_addr, (char *)hp->h_addr, hp->h_length);
@@ -36,7 +36,7 @@ bool Sock::connectSocket(const char * hostID, int port)
 
 	if (connect(sock, (sockaddr *)&server, sizeof server) == -1)
 	{
-		throw 1; // "·şÎñÆ÷ÎŞ·¨Á¬½Ó";
+		throw 1; // "æœåŠ¡å™¨æ— æ³•è¿æ¥";
 		return false;
 	}
 	else
