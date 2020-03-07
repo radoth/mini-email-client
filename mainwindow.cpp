@@ -170,6 +170,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     mouse_relative_pos.setY(0);
 }
 
+/*-------------------------------------------*/
+
 QWidget *MainWindow::createItem(QString title, QString content,QString num)
 {    //构造一个邮件条目，显示在列表中
     QWidget *myItem=new QWidget(this);
@@ -208,6 +210,8 @@ void MainWindow::on_nextHello_clicked()    //点击下一步
     ui->stackedWidget->setCurrentIndex(9);
 }
 
+/*-----------------------选择邮箱--------------------------*/
+
 void MainWindow::on_MailWhu_clicked()    //点击武大邮箱
 {
     ui->smtpServer->setText("smtp.whu.edu.cn");
@@ -222,6 +226,33 @@ void MainWindow::on_MailWhu_clicked()    //点击武大邮箱
     //ui->passWord->setText("789456-KK");
 }
 
+void MainWindow::on_Mail163_clicked()    //点击163邮箱
+{    //自动设置好服务器
+    ui->smtpServer->setText("smtp.163.com");
+    ui->smtpPort->setText("25");
+    ui->pop3Server->setText("pop3.163.com");
+    ui->pop3Port->setText("110");
+    ui->stackedWidget->setCurrentIndex(4);
+}
+
+
+
+void MainWindow::on_Mailqq_clicked()    //点击qq邮箱
+{    //自动设置好服务器
+    ui->smtpServer->setText("smtp.qq.com");
+    ui->smtpPort->setText("25");
+    ui->pop3Server->setText("pop3.qq.com");
+    ui->pop3Port->setText("110");
+    ui->stackedWidget->setCurrentIndex(4);
+}
+
+
+void MainWindow::on_MailOther_clicked()    //点击其他邮箱
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+/*----------------------- 进入主页-----------------------------------*/
 void MainWindow::on_toMainPage_clicked()    //主页按钮
 {    //保存好用户输入的信息
     smtpServer=ui->smtpServer->text().toStdString();
@@ -259,6 +290,8 @@ void MainWindow::on_UpdateDone()    //在更新邮件操作完成后
     account.insert(QString::fromStdString(mailAddress),QString::fromStdString(userName),QString::fromStdString(password),QString::fromStdString(smtpServer),stoi(smtpPort.c_str()),QString::fromStdString(pop3Server),stoi(pop3Port.c_str()));
 
 }
+
+/*--------------------更新邮件--------------------*/
 
 void MainWindow::on_UpdateStart()    //更新开始
 {
@@ -311,6 +344,7 @@ cout<<"error occured!";
     }
 }
 
+/*--------------------------------------------------------------*/
 void MainWindow::animation(QWidget *o)
 {
     QGraphicsOpacityEffect * m_pGraphicsOpacityEffect1=new QGraphicsOpacityEffect(o);
@@ -328,6 +362,8 @@ void MainWindow::animation(QWidget *o)
 }
 
 
+
+/*---------------------------显示信件--------------------------------*/
 void MainWindow::on_mailList_itemDoubleClicked(QTreeWidgetItem *item, int column)    //双击查看一封信
 {    //用户双击一封信，查找该邮件的id
     QWidget *now=ui->mailList->itemWidget(item,0);
@@ -360,6 +396,10 @@ void MainWindow::displayLetter(QString id)    //显示一封信
     }
 }
 
+
+
+/*----------------------------删除信件----------------------------------*/
+
 void MainWindow::removeLetter(QString id)    //删除一封信
 {
         //在allletter里找到标号id的信，删除
@@ -376,126 +416,6 @@ void MainWindow::removeLetter(QString id)    //删除一封信
     }
 }
 
-void MainWindow::on_back_clicked()    //返回按钮
-{
-    ui->stackedWidget->setCurrentIndex(5);
-}
-
-void MainWindow::on_send_clicked()    //发送按钮
-{
-        //构造mail对象，然后调用smtp模块发送
-    Mail test;
-    test.hostID = smtpServer;
-    cout<<smtpPort<<endl;
-    test.port = stoi(smtpPort);
-    cout<<"here is two"<<endl;
-    test.localName = "MailClient";
-    test.username = userName;
-    test.password = password;
-    test.mailFrom = ui->WriteSender->text().toStdString();
-    test.mailTo = ui->WriteRecv->text().toStdString();
-    test.subject = ui->WriteSubject->text().toLocal8Bit().toStdString();
-    test.content = ui->WriteContent->toPlainText().toLocal8Bit().toStdString();
-    cout<<test.content<<endl;
-
-        //ui->send->setText(QString::fromLocal8Bit("正在发送..."));
-    QMessageBox::information(this, QString::fromLocal8Bit("Tips"), QString::fromLocal8Bit("Sending..."));
-            //准备完毕，发送
-    SendMail my;
-        try{
-        my.sendMail(test);
-        }catch(...)
-        {
-            cout<<"Send Fail!";
-        }
-
-        ui->stackedWidget->setCurrentIndex(5);
-        //ui->send->setText(QString::fromLocal8Bit("发送"));
-}
-
-void MainWindow::on_back_2_clicked()    //返回按钮
-{
-    ui->stackedWidget->setCurrentIndex(5);
-}
-
-void MainWindow::on_toWrite_clicked()    //写信按钮
-{
-    ui->stackedWidget->setCurrentIndex(7);
-}
-
-void MainWindow::on_del_clicked()    //删除按钮
-{
-    ui->stackedWidget->setCurrentIndex(5);
-}
-
-void MainWindow::on_refresh_clicked()    //刷新按钮
-{
-        //原理：创建update线程重新获取一遍，显示在邮件列表中
-    ui->stackedWidget->setCurrentIndex(5);
-    Update *my=new Update();
-    //connect(my,SIGNAL(updateDone),this,SLOT(on_UpdateDone));
-    connect(my,&Update::updateDone,this,&MainWindow::on_UpdateDone);
-    connect(my,&Update::updateStart,this,&MainWindow::on_UpdateStart);
-    connect(my,&Update::updateWrong,this,&MainWindow::on_UpdateWrong);
-    my->window=this;
-    my->start();
-}
-
-void MainWindow::on_reply_clicked()    //回复按钮
-{    //打开写信页面，并设置好收发件人
-    QString addr=ui->ReadSender->text();
-    QString subj=ui->ReadTitle->text();
-    ui->WriteSender->setText(QString::fromStdString(mailAddress));
-    ui->WriteRecv->setText(addr);
-    ui->WriteSubject->setText("Re: "+subj);
-    ui->stackedWidget->setCurrentIndex(7);
-
-}
-
-void MainWindow::on_refresh_2_clicked()    //刷新按钮
-{
-    //新建一个Update线程，从服务器拉取一遍列表
-    Update *my=new Update();
-    //connect(my,SIGNAL(updateDone),this,SLOT(on_UpdateDone));
-    connect(my,&Update::updateDone,this,&MainWindow::on_UpdateDone);
-    connect(my,&Update::updateStart,this,&MainWindow::on_UpdateStart);
-    connect(my,&Update::updateWrong,this,&MainWindow::on_UpdateWrong);
-    my->window=this;
-    my->start();
-}
-
-void MainWindow::on_Mail163_clicked()    //点击163邮箱
-{    //自动设置好服务器
-    ui->smtpServer->setText("smtp.163.com");
-    ui->smtpPort->setText("25");
-    ui->pop3Server->setText("pop3.163.com");
-    ui->pop3Port->setText("110");
-    ui->stackedWidget->setCurrentIndex(4);
-}
-
-void MainWindow::on_MailOther_clicked()    //点击其他邮箱
-{
-    ui->stackedWidget->setCurrentIndex(2);
-}
-
-void MainWindow::on_Mailqq_clicked()    //点击qq邮箱
-{    //自动设置好服务器
-    ui->smtpServer->setText("smtp.qq.com");
-    ui->smtpPort->setText("25");
-    ui->pop3Server->setText("pop3.qq.com");
-    ui->pop3Port->setText("110");
-    ui->stackedWidget->setCurrentIndex(4);
-}
-
-void MainWindow::on_nextSMTP_clicked()    //点击下一步
-{
-    ui->stackedWidget->setCurrentIndex(3);
-}
-
-void MainWindow::on_nextPOP3_clicked()    //点击下一步
-{
-    ui->stackedWidget->setCurrentIndex(4);
-}
 
 void MainWindow::on_toDelete_clicked()    //点击左侧垃圾桶按钮
 {
@@ -541,6 +461,116 @@ void MainWindow::on_deleteList_itemDoubleClicked(QTreeWidgetItem *item, int colu
     test2.dele(stoi(id.toStdString()));
     test2.quit();
 }
+
+
+/*----------------------------发送信件--------------------------------*/
+
+void MainWindow::on_send_clicked()    //发送按钮
+{
+        //构造mail对象，然后调用smtp模块发送
+    Mail test;
+    test.hostID = smtpServer;
+    cout<<smtpPort<<endl;
+    test.port = stoi(smtpPort);
+    cout<<"here is two"<<endl;
+    test.localName = "MailClient";
+    test.username = userName;
+    test.password = password;
+    test.mailFrom = ui->WriteSender->text().toStdString();
+    test.mailTo = ui->WriteRecv->text().toStdString();
+    test.subject = ui->WriteSubject->text().toLocal8Bit().toStdString();
+    test.content = ui->WriteContent->toPlainText().toLocal8Bit().toStdString();
+    cout<<test.content<<endl;
+
+        //ui->send->setText(QString::fromLocal8Bit("正在发送..."));
+    QMessageBox::information(this, QString::fromLocal8Bit("Tips"), QString::fromLocal8Bit("Sending..."));
+            //准备完毕，发送
+    SendMail my;
+        try{
+        my.sendMail(test);
+        }catch(...)
+        {
+            cout<<"Send Fail!";
+        }
+
+        ui->stackedWidget->setCurrentIndex(5);
+        //ui->send->setText(QString::fromLocal8Bit("发送"));
+}
+
+/*-----------------页面跳转----------------------*/
+
+void MainWindow::on_back_clicked()    //返回按钮
+{
+    ui->stackedWidget->setCurrentIndex(5);
+}
+
+void MainWindow::on_back_2_clicked()    //返回按钮
+{
+    ui->stackedWidget->setCurrentIndex(5);
+}
+
+void MainWindow::on_toWrite_clicked()    //写信按钮
+{
+    ui->stackedWidget->setCurrentIndex(7);
+}
+
+void MainWindow::on_del_clicked()    //删除按钮
+{
+    ui->stackedWidget->setCurrentIndex(5);
+}
+
+
+/*--------------------刷新邮件列表---------------------------*/
+void MainWindow::on_refresh_clicked()    //刷新按钮
+{
+        //原理：创建update线程重新获取一遍，显示在邮件列表中
+    ui->stackedWidget->setCurrentIndex(5);
+    Update *my=new Update();
+    //connect(my,SIGNAL(updateDone),this,SLOT(on_UpdateDone));
+    connect(my,&Update::updateDone,this,&MainWindow::on_UpdateDone);
+    connect(my,&Update::updateStart,this,&MainWindow::on_UpdateStart);
+    connect(my,&Update::updateWrong,this,&MainWindow::on_UpdateWrong);
+    my->window=this;
+    my->start();
+}
+
+void MainWindow::on_refresh_2_clicked()    //刷新按钮
+{
+    //新建一个Update线程，从服务器拉取一遍列表
+    Update *my=new Update();
+    //connect(my,SIGNAL(updateDone),this,SLOT(on_UpdateDone));
+    connect(my,&Update::updateDone,this,&MainWindow::on_UpdateDone);
+    connect(my,&Update::updateStart,this,&MainWindow::on_UpdateStart);
+    connect(my,&Update::updateWrong,this,&MainWindow::on_UpdateWrong);
+    my->window=this;
+    my->start();
+}
+
+
+/*-----------------------回复邮件-----------------------------*/
+void MainWindow::on_reply_clicked()    //回复按钮
+{    //打开写信页面，并设置好收发件人
+    QString addr=ui->ReadSender->text();
+    QString subj=ui->ReadTitle->text();
+    ui->WriteSender->setText(QString::fromStdString(mailAddress));
+    ui->WriteRecv->setText(addr);
+    ui->WriteSubject->setText("Re: "+subj);
+    ui->stackedWidget->setCurrentIndex(7);
+
+}
+
+
+
+void MainWindow::on_nextSMTP_clicked()    //点击下一步
+{
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_nextPOP3_clicked()    //点击下一步
+{
+    ui->stackedWidget->setCurrentIndex(4);
+}
+
 
 void MainWindow::on_back_3_clicked()    //返回按钮
 {

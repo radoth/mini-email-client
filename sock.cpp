@@ -6,7 +6,7 @@ using namespace std;
 
 Sock::Sock()
 {
-	WORD sockVersion = MAKEWORD(2, 2);
+    WORD sockVersion = MAKEWORD(2, 2);  //声明使用socket2.2版本
 	WSADATA data;
 	if (WSAStartup(sockVersion, &data) != 0)
 	{

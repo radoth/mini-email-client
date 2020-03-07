@@ -3,36 +3,36 @@
 #include"base64.h"
 using namespace std;
 
-class Mail      //smtpÄ£¿é·¢ĞÅÊ±£¬Ìá¹©Ò»¸ömail¶ÔÏó×÷Îª±ØÒªµÄĞÅÏ¢
+class Mail      //smtpæ¨¡å—å‘ä¿¡æ—¶ï¼Œæä¾›ä¸€ä¸ªmailå¯¹è±¡ä½œä¸ºå¿…è¦çš„ä¿¡æ¯
 {
 public:
-    string hostID;      //smtp·şÎñÆ÷µØÖ·
-    int port;      //¶Ë¿ÚºÅ
-    string localName;      //Ö÷»úÃû
+    string hostID;      //smtpæœåŠ¡å™¨åœ°å€
+    int port;      //ç«¯å£å·
+    string localName;      //ä¸»æœºå
 
-    string username;      //ÓÃ»§Ãû
-    string password;      //ÃÜÂë
+    string username;      //ç”¨æˆ·å
+    string password;      //å¯†ç 
 
-	string mailFrom;//·¢ĞÅÈË
-	string mailTo;//ÊÕĞÅÈË
+	string mailFrom;//å‘ä¿¡äºº
+	string mailTo;//æ”¶ä¿¡äºº
 
-    string subject;      //Ö÷Ìâ
-    string content;      //ÄÚÈİ
+    string subject;      //ä¸»é¢˜
+    string content;      //å†…å®¹
 
-	//ÒÔÏÂÊÇĞÅÍ·ÓÃµ½µÄĞÅÏ¢
-	string recv;//ĞÅÍ·´¦µÄ½ÓÊÜÕß
-	string cc;	//³­ËÍ
-	string bcc;	//ÃØÃÜ³­ËÍ
+	//ä»¥ä¸‹æ˜¯ä¿¡å¤´ç”¨åˆ°çš„ä¿¡æ¯
+	string recv;//ä¿¡å¤´å¤„çš„æ¥å—è€…
+	string cc;	//æŠ„é€
+	string bcc;	//ç§˜å¯†æŠ„é€
 };
 
-class SendMail      //Ìá¹©smtp·¢ĞÅ·şÎñ
+class SendMail      //æä¾›smtpå‘ä¿¡æœåŠ¡
 {
 public:
 	bool sendMail(Mail my);
 
 private:
-    void sendAMail(Mail my);      //·¢ËÍÒ»·âĞÅ
-    void checkError(int err);      //²é´í
-    string generateSimpleHead(Mail my);      //Éú³ÉĞÅÍ·
-    int getResponseCode(Sock *mySock);      //½ÓÊÜ·şÎñÆ÷·´À¡
+    void sendAMail(Mail my);      //å‘é€ä¸€å°ä¿¡
+    void checkError(int err);      //æŸ¥é”™
+    string generateSimpleHead(Mail my);      //ç”Ÿæˆä¿¡å¤´
+    int getResponseCode(Sock *mySock);      //æ¥å—æœåŠ¡å™¨åé¦ˆ
 };
