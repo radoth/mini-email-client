@@ -24,9 +24,9 @@ void Update::run()
     catch(...)
     {
         emit updateWrong();
-        cout<<"!!!!!!!!!!!!!!!!!!!!";
+        cout<<"\nERROR: A fatal error occurs during transmission.\n";
     }
-    cout<<"获取完毕.";
+    cout<<"\nUpdate Process Ended. \n";
     test2.quit();
 
 }
