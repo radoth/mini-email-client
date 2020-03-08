@@ -165,9 +165,17 @@ void RecvMail::dele(int num)    //删除
 
 string RecvMail::getResponse(Sock * mySock)    //获取响应结果
 {
+    try{
 	mySock->recvSocket();
 	char *result = mySock->getRecvBuffer();
 	string res(result);
-	//cout << res << endl;
-	return res;
+    //cout << res << endl;
+    return res;
+    }catch(...)
+    {
+        int errcode=WSAGetLastError();
+        cout<<"Socket Transmission Error. WinSock2 ERROR CODE:"<<errcode<<endl<<endl;
+        throw 1;
+    };
+
 }
