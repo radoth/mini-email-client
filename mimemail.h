@@ -17,12 +17,19 @@ public:
     string mailTo;//收信人
 
     string subject;      //主题
-    string content;      //内容
+    string header;      //信头
+    string body;      //内容
 
     //以下是信头用到的信息
     string recv;//信头处的接受者
     string cc;	//抄送
     string bcc;	//秘密抄送
+    void FormatTheMessage();
+
+protected:
+    virtual void prepare_header();
+    virtual void prepare_body();
+
 };
 
 class MIMEMail:public Mail
@@ -30,6 +37,8 @@ class MIMEMail:public Mail
 public:
     MIMEMail();
 
+    string m_sPartBoundary;//分割线内容
+    string m_sMIMEContentType;//MIME段内容类型
 
     // MIME Type Codes
     enum eMIMETypeCode
@@ -62,12 +71,11 @@ protected:
     //插入MIME段分割线
     void insert_boundary( string& sText );
     void append_mime_parts();
-    void prepare_header();
-    void prepare_body();
+    virtual void prepare_header();
+    virtual void prepare_body();
 
     string m_sNoMIMEText;
-    string m_sPartBoundary;//分割线内容
-    string m_sMIMEContentType;//MIME段内容类型
+
 private:
     //MIME段部分
     class MIMEPart

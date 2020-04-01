@@ -1,4 +1,5 @@
 #include "smtp.h"
+#include "mimemail.h"
 
 bool SendMail::sendMail(Mail my)    //发送一封邮件
 {
@@ -112,8 +113,10 @@ void SendMail::sendAMail(Mail my)
     //if (resCode != 354)
         //throw 9;
 
-    string all = generateSimpleHead(my);    //生成信头
-    all = all +"\r\n\r\n"+ my.content + "\r\n";
+    //string all = generateSimpleHead(my);
+
+     my.FormatTheMessage();
+    string all = my.header +"\r\n\r\n"+ my.body + "\r\n";
 
     mysock.sendSocket(all.c_str());    //发送数据
     mysock.sendSocket(".\r\n");
@@ -171,7 +174,7 @@ void SendMail::checkError(int err)    //错误代码检查，待完善
     default:break;
     }
 }
-
+/*
 string SendMail::generateSimpleHead(Mail my)    //生成信头
 {
     string header;
@@ -207,10 +210,13 @@ string SendMail::generateSimpleHead(Mail my)    //生成信头
     }
 
     header  =from + to + cc + bcc + dat + subject;
-    header += header+ "MIME-Version: 1.0\r\n"+"Content-Type: multipart/mixed;boundary=ZYCSDLzhangyuanchishidalao\r\n" ;
+    string mimeVersion;
+    mimeVersion = "MIME-Version: 1.0\r\n";
+    //string content = "Content-Type: "+m_sMIMEContentType+";"+"boundary="+m_sPartBoundary+"\r\n";
+    //string a = MIMEMail::m_sMIMEContentType
 
     return header;
-}
+}*/
 
 int SendMail::getResponseCode(Sock * mySock)
 {
