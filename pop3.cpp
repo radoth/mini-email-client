@@ -121,9 +121,8 @@ readLetterSimple RecvMail::retr(int num)    //RETR命令
 	{
 		string res = getResponse(mysock);
 		fin = fin + res;
-        string down = res.substr(res.length() - 5,3);
-        if (down == "\r\n.")
-			break;
+        if(res.find("\r\n.")!=string::npos)
+            break;
 	}
 	readLetterSimple back(fin);
 	back.displayID = to_string(num);
