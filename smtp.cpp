@@ -174,6 +174,7 @@ void SendMail::checkError(int err)    //错误代码检查，待完善
 
 string SendMail::generateSimpleHead(Mail my)    //生成信头
 {
+    string header;
     string from("From:");
     from = from + my.mailFrom + "\r\n";
 
@@ -205,7 +206,10 @@ string SendMail::generateSimpleHead(Mail my)    //生成信头
         subject = "Subject:" + my.subject + "\r\n";
     }
 
-    return from + to + cc + bcc + dat + subject;
+    header  =from + to + cc + bcc + dat + subject;
+    header += header+ "MIME-Version: 1.0\r\n"+"Content-Type: multipart/mixed;boundary=ZYCSDLzhangyuanchishidalao\r\n" ;
+
+    return header;
 }
 
 int SendMail::getResponseCode(Sock * mySock)
