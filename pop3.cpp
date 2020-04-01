@@ -119,10 +119,22 @@ readLetterSimple RecvMail::retr(int num)    //RETR命令
 	mysock->sendSocket(retr.c_str());
 	while (true)
 	{
-		string res = getResponse(mysock);
-		fin = fin + res;
+		string res = getResponse(mysock);		
         if(res.find("\r\n.")!=string::npos)
+        {
+            fin = fin + res;
             break;
+        }
+        else{
+            try{
+                res=res.substr(0,res.size()-2);
+            }catch(...)
+            {
+                cout<<"Cut string error."<<endl;
+            }
+            fin=fin+res;
+        }
+
 	}
 	readLetterSimple back(fin);
 	back.displayID = to_string(num);
@@ -148,7 +160,7 @@ vector<readLetterSimple> RecvMail::getMailList()    //获取所有邮件
 			int number = atoi(result[1].str().c_str());
 			res.push_back(retr(number));
             mailCountRealTime=number;
-            cout << "Mail No." <<number<<" was received successfully.\n"<< endl;
+            //cout << "Mail No." <<number<<" was received successfully.\n"<< endl;
 		}
 	}
 

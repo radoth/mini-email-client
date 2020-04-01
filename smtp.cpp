@@ -4,31 +4,16 @@
 bool SendMail::sendMail(Mail my)    //发送一封邮件
 {
     try {
-        cout << "正在发送......" << endl;
+        cout << "The mail is begin sent..." << endl;
         sendAMail(my);
-        cout << "发送成功！" << endl;
+        cout << "Mail sent successfully." << endl;
         return true;
     }
 
     catch(int err)
     {
-        cout<<"发送错误！"<<endl;
-        cout<<"错误代码: "<<err<<endl;
-        /*switch (err)
-        {
-        case 0:cout << "错误 0：无法解析服务器" << endl; break;
-        case 1:cout << "错误 1：服务器无法连接" << endl; break;
-        case 2:cout << "错误 2：建立连接失败" << endl; break;
-        case 3:cout << "错误 3：问候失败" << endl; break;
-        case 4:cout << "错误 4：无法登录" << endl; break;
-        case 5:cout << "错误 5：用户名错误" << endl; break;
-        case 6:cout << "错误 6：用户名或密码错误" << endl; break;
-        case 7:cout << "错误 7：发件人错误" << endl; break;
-        case 8:cout << "错误 8：收件人地址错误" << endl; break;
-        case 9:cout << "错误 9：请求传送正文时错误。" << endl; break;
-        case 10:cout << "错误 10：发送正文失败" << endl; break;
-        default:cout << "未知错误。" << endl; break;
-        }*/
+        cout<<"Oops! An SMTP error occurs."<<endl;
+        cout<<"SMTP errCode:"<<err<<endl;
         return false;
     }
 
@@ -225,6 +210,12 @@ int SendMail::getResponseCode(Sock * mySock)
     string res(result);
     //cout << res << endl;
     //system("PAUSE");
-    return stoi(res.substr(0, 3), 0, 10);
+    int RspsCode;
+    try {
+        RspsCode=stoi(res.substr(0, 3), 0, 10);
+    } catch (...) {
+        RspsCode=-1;
+    }
+    return RspsCode;
 
 }
