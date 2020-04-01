@@ -479,8 +479,8 @@ void MainWindow::on_send_clicked()    //发送按钮
     test.mailFrom = ui->WriteSender->text().toStdString();
     test.mailTo = ui->WriteRecv->text().toStdString();
     test.subject = ui->WriteSubject->text().toLocal8Bit().toStdString();
-    test.content = ui->WriteContent->toPlainText().toLocal8Bit().toStdString();
-    cout<<test.content<<endl;
+    test.body = ui->WriteContent->toPlainText().toLocal8Bit().toStdString();
+    cout<<test.body<<endl;
 
         //ui->send->setText(QString::fromLocal8Bit("正在发送..."));
     QMessageBox::information(this, QString::fromLocal8Bit("Tips"), QString::fromLocal8Bit("Sending..."));

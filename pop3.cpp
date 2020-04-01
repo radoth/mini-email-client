@@ -121,8 +121,8 @@ readLetterSimple RecvMail::retr(int num)    //RETR命令
 	{
 		string res = getResponse(mysock);
 		fin = fin + res;
-		string down = res.substr(res.length() - 5);
-		if (down == "\r\n.\r\n")
+        string down = res.substr(res.length() - 5,3);
+        if (down == "\r\n.")
 			break;
 	}
 	readLetterSimple back(fin);
@@ -149,7 +149,7 @@ vector<readLetterSimple> RecvMail::getMailList()    //获取所有邮件
 			int number = atoi(result[1].str().c_str());
 			res.push_back(retr(number));
             mailCountRealTime=number;
-            cout << "a mail get" <<number<< endl;
+            cout << "Mail No." <<number<<" was received successfully.\n"<< endl;
 		}
 	}
 
@@ -165,9 +165,17 @@ void RecvMail::dele(int num)    //删除
 
 string RecvMail::getResponse(Sock * mySock)    //获取响应结果
 {
+    try{
 	mySock->recvSocket();
 	char *result = mySock->getRecvBuffer();
 	string res(result);
-	//cout << res << endl;
-	return res;
+    //cout << res << endl;
+    return res;
+    }catch(...)
+    {
+        int errcode=WSAGetLastError();
+        cout<<"Socket Transmission Error. WinSock2 ERROR CODE:"<<errcode<<endl<<endl;
+        throw 1;
+    };
+
 }

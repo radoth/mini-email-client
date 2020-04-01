@@ -1,8 +1,9 @@
 #pragma once
 #include "sock.h"
 #include"base64.h"
+#include"mimemail.h"
 using namespace std;
-
+/*
 class Mail      //smtp模块发信时，提供一个mail对象作为必要的信息
 {
 public:
@@ -24,7 +25,7 @@ public:
 	string cc;	//抄送
 	string bcc;	//秘密抄送
 };
-
+*/
 class SendMail      //提供smtp发信服务
 {
 public:
