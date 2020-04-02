@@ -669,12 +669,20 @@ void MainWindow::on_addAttachment_clicked()
     QString filePath = QFileDialog::getOpenFileName(this);
     if(filePath!="")
     {
-        if(fileList.size() == 4)
+        /*if(fileList.size() == 4)
         {
             QMessageBox::information(NULL, "Warning", "最多只能添加4个附件！",QMessageBox::Yes);
             return;
-        }
+        }*/
+
+        //保存附件路径
         fileList.push_back(filePath.toStdString());
+
+        //扩展高度
+        if(fileList.size()>=4)
+        {
+            ui->attachFrame->setFixedSize(QSize(739,((fileList.size()-1)/4+1)*50));
+        }
 
         //分割出文件名
         QString fileName = filePath.section("/",-1);
@@ -688,10 +696,8 @@ void MainWindow::on_addAttachment_clicked()
         attachment->setIcon(QIcon(":/new/prefix1/image/file.png"));
         attachment->resize(150,40);
         attachment->setStyleSheet("QPushButton {border:none; font: 9pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
-        attachment->move((fileList.size()-1)*160,0);
+        attachment->move((fileList.size()-1)%4*160,(fileList.size()-1)/4*50);
 
-        QVBoxLayout *layout = new QVBoxLayout( ui->attachFrame);
-        layout->addWidget( attachment );
         attachment->show();
         fileButtonList.append(attachment);
 
@@ -704,6 +710,7 @@ void MainWindow::on_addAttachment_clicked()
 }
 
 
+//清空附件
 void MainWindow::delete_all_attachment()
 {
     if(fileList.size()>0)
@@ -712,6 +719,8 @@ void MainWindow::delete_all_attachment()
         QList<QPushButton*> btns= ui->attachFrame->findChildren<QPushButton*>();
         foreach (QPushButton* btn, btns)
         {   delete btn;  }
+        ui->attachFrame->setFixedSize(QSize(739,59));
+
     }
 
 }
