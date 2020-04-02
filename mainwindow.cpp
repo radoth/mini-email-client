@@ -483,7 +483,7 @@ void MainWindow::on_send_clicked()    //发送按钮
 {
     ui->send->setEnabled(false);
         //构造mail对象，然后调用smtp模块发送
-    Mail test;
+    MIMEMail test;
     test.hostID = smtpServer;
     //cout<<smtpPort<<endl;
     test.port = stoi(smtpPort);

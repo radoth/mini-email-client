@@ -5,6 +5,8 @@
 #include"readLetter.h"
 #include<QTreeWidgetItem>
 #include<QListWidgetItem>
+#include"mimemail.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
