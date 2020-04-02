@@ -134,6 +134,7 @@ MainWindow::~MainWindow()
 void MainWindow::loadAccount()//数据库读取
 {
     account.createConnection();
+    account.createTable();
     QVector<Remember> temp=account.queryAll();
     accountResult=temp;
 
@@ -265,6 +266,7 @@ void MainWindow::on_toMainPage_clicked()    //主页按钮
     ui->toMainPage->setText("正在获取邮件...");
     //ui->toMainPage->setEnabled(false);
 
+    ui->toMainPage->setEnabled(false);
     UpdateLetter();
     //ui->toMainPage->setEnabled(true);
     //ui->stackedWidget->setCurrentIndex(5);
@@ -272,6 +274,9 @@ void MainWindow::on_toMainPage_clicked()    //主页按钮
 
 void MainWindow::on_UpdateDone()    //在更新邮件操作完成后
 {
+    ui->toMainPage->setEnabled(true);
+    ui->refresh->setEnabled(true);
+    ui->refresh_2->setEnabled(true);
     ui->mailList->clear();    //清除邮件列表之前的内容
     cout<<"running update done!";
     ui->toMainPage->setEnabled(true);
@@ -280,7 +285,7 @@ void MainWindow::on_UpdateDone()    //在更新邮件操作完成后
     for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
-        qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
+        //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
         ui->mailList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
     }
@@ -295,11 +300,16 @@ void MainWindow::on_UpdateDone()    //在更新邮件操作完成后
 
 void MainWindow::on_UpdateStart()    //更新开始
 {
-    QMessageBox::information(NULL, "提示.", "正在获取邮件，本操作可能耗费较长时间，视当前网络状况而定。若获取失败，请重新获取     .");
+    ui->refresh->setEnabled(false);
+    ui->refresh_2->setEnabled(false);
+    //QMessageBox::information(NULL, "提示.", "正在获取邮件，本操作可能耗费较长时间，视当前网络状况而定。若获取失败，请重新获取     .");
 }
 
 void MainWindow::on_UpdateWrong()    //更新出错
 {
+    ui->toMainPage->setEnabled(true);
+    ui->refresh->setEnabled(true);
+    ui->refresh_2->setEnabled(true);
     QMessageBox::critical(NULL, "错误.", "传输过程出错。请重试     .");
 }
 
@@ -339,7 +349,7 @@ cout<<"error occured!";
     for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
-        qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
+        //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         ui->mailList->setItemWidget(item3,0,createItem(QString::fromStdString((*i).subject),"QString::fromStdString((*i).content)",QString::fromStdString((*i).displayID)));
     }
 }
@@ -366,12 +376,14 @@ void MainWindow::animation(QWidget *o)
 /*---------------------------显示信件--------------------------------*/
 void MainWindow::on_mailList_itemDoubleClicked(QTreeWidgetItem *item, int column)    //双击查看一封信
 {    //用户双击一封信，查找该邮件的id
+    ui->mailList->setEnabled(false);
     QWidget *now=ui->mailList->itemWidget(item,0);
     QList<QLabel *> labelList = now->findChildren<QLabel *>();
     auto id=labelList[1]->text();
-    qDebug()<<id;
+    //qDebug()<<id;
     currentLetter=id.toStdString();
     displayLetter(id);    //显示id的信
+    ui->mailList->setEnabled(true);
 }
 
 void MainWindow::displayLetter(QString id)    //显示一封信
@@ -380,7 +392,7 @@ void MainWindow::displayLetter(QString id)    //显示一封信
     for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {
         string thisOne=(*i).displayID;
-        cout<<thisOne<<" for serach";
+        //cout<<thisOne<<" for serach";
         if(thisOne==id.toStdString())
         {
             ui->ReadTitle->setText(QString::fromLocal8Bit((*i).subject.c_str()));
@@ -406,7 +418,7 @@ void MainWindow::removeLetter(QString id)    //删除一封信
     for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {
         string thisOne=(*i).displayID;
-        cout<<thisOne<<" for serach";
+        //cout<<thisOne<<" for serach";
         if(thisOne==id.toStdString())
         {
             allLetter.erase(i);
@@ -423,7 +435,7 @@ void MainWindow::on_toDelete_clicked()    //点击左侧垃圾桶按钮
     for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {    //重新从allLetter中读取所有邮件并显示
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->deleteList);
-        qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
+        //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
         ui->deleteList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
     }
@@ -433,6 +445,7 @@ void MainWindow::on_toDelete_clicked()    //点击左侧垃圾桶按钮
 void MainWindow::on_deleteList_itemDoubleClicked(QTreeWidgetItem *item, int column)    //删除信件时双击
 {
         //先从用户双击的项中查找该邮件的id
+    ui->deleteList->setEnabled(false);
     QWidget *now=ui->deleteList->itemWidget(item,0);
     QList<QLabel *> labelList = now->findChildren<QLabel *>();
     auto id=labelList[1]->text();
@@ -443,7 +456,7 @@ void MainWindow::on_deleteList_itemDoubleClicked(QTreeWidgetItem *item, int colu
     for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {    //寻找标号id的邮件，删除！
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->deleteList);
-        qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
+        //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
         ui->deleteList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
     }
@@ -460,6 +473,7 @@ void MainWindow::on_deleteList_itemDoubleClicked(QTreeWidgetItem *item, int colu
     test2.login();
     test2.dele(stoi(id.toStdString()));
     test2.quit();
+    ui->deleteList->setEnabled(true);
 }
 
 
@@ -467,12 +481,13 @@ void MainWindow::on_deleteList_itemDoubleClicked(QTreeWidgetItem *item, int colu
 
 void MainWindow::on_send_clicked()    //发送按钮
 {
+    ui->send->setEnabled(false);
         //构造mail对象，然后调用smtp模块发送
     MIMEMail test;
     test.hostID = smtpServer;
-    cout<<smtpPort<<endl;
+    //cout<<smtpPort<<endl;
     test.port = stoi(smtpPort);
-    cout<<"here is two"<<endl;
+    //cout<<"here is two"<<endl;
     test.localName = "MailClient";
     test.username = userName;
     test.password = password;
@@ -480,21 +495,22 @@ void MainWindow::on_send_clicked()    //发送按钮
     test.mailTo = ui->WriteRecv->text().toStdString();
     test.subject = ui->WriteSubject->text().toLocal8Bit().toStdString();
     test.body = ui->WriteContent->toPlainText().toLocal8Bit().toStdString();
-    cout<<test.body<<endl;
+    //cout<<test.body<<endl;
 
         //ui->send->setText(QString::fromLocal8Bit("正在发送..."));
     QMessageBox::information(this, QString::fromLocal8Bit("Tips"), QString::fromLocal8Bit("Sending..."));
             //准备完毕，发送
     SendMail my;
-        try{
+        //try{
         my.sendMail(test);
-        }catch(...)
-        {
-            cout<<"Send Fail!";
-        }
+        //}catch(...)
+        //{
+            //cout<<"Send Fail!";
+        //}
 
         ui->stackedWidget->setCurrentIndex(5);
         //ui->send->setText(QString::fromLocal8Bit("发送"));
+        ui->send->setEnabled(true);
 }
 
 /*-----------------页面跳转----------------------*/
@@ -523,6 +539,8 @@ void MainWindow::on_del_clicked()    //删除按钮
 /*--------------------刷新邮件列表---------------------------*/
 void MainWindow::on_refresh_clicked()    //刷新按钮
 {
+    ui->refresh->setEnabled(false);
+    ui->refresh_2->setEnabled(false);
         //原理：创建update线程重新获取一遍，显示在邮件列表中
     ui->stackedWidget->setCurrentIndex(5);
     Update *my=new Update();
@@ -536,6 +554,8 @@ void MainWindow::on_refresh_clicked()    //刷新按钮
 
 void MainWindow::on_refresh_2_clicked()    //刷新按钮
 {
+    ui->refresh->setEnabled(false);
+    ui->refresh_2->setEnabled(false);
     //新建一个Update线程，从服务器拉取一遍列表
     Update *my=new Update();
     //connect(my,SIGNAL(updateDone),this,SLOT(on_UpdateDone));

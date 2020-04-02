@@ -3,12 +3,23 @@
 
 void readLetterSimple::unfold()    //字符串格式处理
 {
+    while(1)
+    {
+        allocator<char>::size_type pos=letterAfter.find('\x8');
+        if(pos==string::npos)
+            break;
+        else{
+            letterAfter.erase(pos);
+            letterAfter.erase(pos-1);
+        }
+    }
     regex reg("\r\n\t");    //去除行折叠
 	letterAfter = regex_replace(letter, reg, "");
 
     regex reg2("^[+-].*?\r\n");    //去除服务器状态信息
 	letterAfter = regex_replace(letterAfter, reg2, "");
 	
+    //cout<<letterAfter<<endl;
 }
 
 readLetterSimple::readLetterSimple(string letter)
@@ -67,7 +78,7 @@ void readLetterSimple::analysis()
 			continue;
 		else if (match(*i, ".", junk))
 			continue;
-		else content.append(*i + "\n");
+        else content.append(*i + "\n");
 	}
 }
 

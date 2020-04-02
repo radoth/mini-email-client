@@ -67,7 +67,7 @@ QVector<Remember> DataBase::queryAll()
     QSqlQuery query(db);
     query.exec("select * from automobil");
     QSqlRecord rec = query.record();
-    qDebug() << QObject::tr("automobil表字段数：." ) << rec.count();
+    //qDebug() << QObject::tr("automobil表字段数：." ) << rec.count();
 
     QVector<Remember> back;
 
