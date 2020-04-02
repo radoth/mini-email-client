@@ -523,6 +523,8 @@ void MainWindow::on_back_clicked()    //返回按钮
 void MainWindow::on_back_2_clicked()    //返回按钮
 {
     ui->stackedWidget->setCurrentIndex(5);
+    delete_all_attachment();
+
 }
 
 void MainWindow::on_toWrite_clicked()    //写信按钮
@@ -533,6 +535,7 @@ void MainWindow::on_toWrite_clicked()    //写信按钮
 void MainWindow::on_del_clicked()    //删除按钮
 {
     ui->stackedWidget->setCurrentIndex(5);
+    delete_all_attachment();
 }
 
 
@@ -690,14 +693,28 @@ void MainWindow::on_addAttachment_clicked()
         QVBoxLayout *layout = new QVBoxLayout( ui->attachFrame);
         layout->addWidget( attachment );
         attachment->show();
+        fileButtonList.append(attachment);
 
         qDebug()<<"filename : "<<fileName;
+
 
 
     }
     qDebug()<<"filePath : "<<filePath;
 }
 
+
+void MainWindow::delete_all_attachment()
+{
+    if(fileList.size()>0)
+    {
+        fileList.clear();
+        QList<QPushButton*> btns= ui->attachFrame->findChildren<QPushButton*>();
+        foreach (QPushButton* btn, btns)
+        {   delete btn;  }
+    }
+
+}
 
 
 
