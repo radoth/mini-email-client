@@ -24,22 +24,26 @@ SOURCES += \
     database.cpp \
     main.cpp \
     mainwindow.cpp \
+    mimecontent.cpp \
     mimemail.cpp \
     pop3.cpp \
     readLetter.cpp \
     smtp.cpp \
     sock.cpp \
+    textplain.cpp \
     update.cpp
 
 HEADERS += \
     base64.h \
     database.h \
     mainwindow.h \
+    mimecontent.h \
     mimemail.h \
     pop3.h \
     readLetter.h \
     smtp.h \
     sock.h \
+    textplain.h \
     update.h
 
 FORMS += \
