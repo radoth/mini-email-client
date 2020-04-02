@@ -50,8 +50,8 @@ void Mail::prepare_header()
 //整理信件格式
 void Mail::FormatTheMessage()
 {
-    prepare_body();
     prepare_header();
+    prepare_body();
 }
 
 
@@ -66,8 +66,8 @@ MIMEMail::MIMEMail()
     // These objects are deleted by CMIMTypeManager's destructor
     pType = new TextPlain( TEXT_PLAIN, 72 );
     register_mime_type( pType );
-    //pType = new CAppOctetStream( APPLICATION_OCTETSTREAM );
-    //register_mime_type( pType );
+    pType = new AppOctetStream( APPLICATION_OCTETSTREAM );
+    register_mime_type( pType );
 
 }
 
@@ -99,11 +99,50 @@ void MIMEMail::append_mime_parts()
 {
 
    MIMEPart part;
-   part = m_MIMEPartList.front();
+
+   /*------------------------------------------------------------------------*/
+   //将filelist中的附件加入到m_MIMEPartList中
+   list<string>::iterator i;
+   i = fileList.begin();
+   while(i!= fileList.end())
+   {
+       AddMIMEPart(*i,APPLICATION_OCTETSTREAM,"",BASE64,false);
+       i++;
+   }
+
+   //遍历m_MIMEPartList，将每个part转换为MIME格式加入body中
+   list<MIMEPart>::iterator i2;
+   i2 = m_MIMEPartList.begin();
+   while (i2 != m_MIMEPartList.end()) {
+       part = *i2;
+       MIMEContent *mimeType = NULL;
+
+       //判断part的MIME类型
+       list<MIMEContent*>::iterator i3;
+       i3 = m_MIMETypeList.begin();
+       while(i3!= m_MIMETypeList.end())
+       {
+           if((*i3)->QueryType(part.m_nContentType))
+           {
+             mimeType = *i3;
+             break;
+           }
+           i3++;
+       }
+
+       insert_boundary(body);
+       mimeType->AppendPart(part.m_sContent,part.m_sParameters,part.m_nEncoding,part.m_bPath,body);
+
+       i2++;
+   }
+
+   /*---------------------------------------------------------------------------*/
+
+   /*part = m_MIMEPartList.front();
    MIMEContent *mimeType = NULL;
    mimeType = m_MIMETypeList.front();
    insert_boundary(body);
-   mimeType->AppendPart(part.m_sContent,part.m_sParameters,part.m_nEncoding,part.m_bPath,body);
+   mimeType->AppendPart(part.m_sContent,part.m_sParameters,part.m_nEncoding,part.m_bPath,body);*/
 }
 
 

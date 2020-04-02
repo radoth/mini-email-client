@@ -3,7 +3,7 @@
 TextPlain::TextPlain( int nContentType, int nWrapPos )
     :MIMEContent( nContentType )
 {
-    m_nWrapPos = nWrapPos;
+    //m_nWrapPos = nWrapPos;
 }
 
 TextPlain::~TextPlain()
@@ -62,11 +62,6 @@ string TextPlain::wrap_text(string szText)
 {
 
     string sTemp;
-    string sLeft;
-    string sRight;
-    int lp = 0;
-    int nCount = 0;
-    int nSpacePos = 0;
 
     if( szText == "" )
         return sTemp;

@@ -20,6 +20,7 @@ LIBS += -lWs2_32
 
 
 SOURCES += \
+    appoctetstream.cpp \
     base64.cpp \
     database.cpp \
     main.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
     update.cpp
 
 HEADERS += \
+    appoctetstream.h \
     base64.h \
     database.h \
     mainwindow.h \

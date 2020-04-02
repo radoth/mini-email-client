@@ -483,7 +483,7 @@ void MainWindow::on_send_clicked()    //发送按钮
 {
     ui->send->setEnabled(false);
         //构造mail对象，然后调用smtp模块发送
-    MIMEMail test;
+
     test.hostID = smtpServer;
     //cout<<smtpPort<<endl;
     test.port = stoi(smtpPort);
@@ -530,6 +530,8 @@ void MainWindow::on_back_2_clicked()    //返回按钮
 void MainWindow::on_toWrite_clicked()    //写信按钮
 {
     ui->stackedWidget->setCurrentIndex(7);
+    ui->WriteSender->setText(QString::fromLocal8Bit(mailAddress.c_str()));
+
 }
 
 void MainWindow::on_del_clicked()    //删除按钮
@@ -664,6 +666,7 @@ void MainWindow::on_newAccount_clicked()
     ui->stackedWidget->setCurrentIndex(1);
 }
 
+//添加附件
 void MainWindow::on_addAttachment_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(this);
@@ -676,12 +679,12 @@ void MainWindow::on_addAttachment_clicked()
         }*/
 
         //保存附件路径
-        fileList.push_back(filePath.toStdString());
+        test.fileList.push_back(filePath.toStdString());
 
         //扩展高度
-        if(fileList.size()>=4)
+        if(test.fileList.size()>=4)
         {
-            ui->attachFrame->setFixedSize(QSize(739,((fileList.size()-1)/4+1)*50));
+            ui->attachFrame->setFixedSize(QSize(739,((test.fileList.size()-1)/4+1)*50));
         }
 
         //分割出文件名
@@ -696,7 +699,7 @@ void MainWindow::on_addAttachment_clicked()
         attachment->setIcon(QIcon(":/new/prefix1/image/file.png"));
         attachment->resize(150,40);
         attachment->setStyleSheet("QPushButton {border:none; font: 9pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
-        attachment->move((fileList.size()-1)%4*160,(fileList.size()-1)/4*50);
+        attachment->move((test.fileList.size()-1)%4*160,(test.fileList.size()-1)/4*50);
 
         attachment->show();
         fileButtonList.append(attachment);
@@ -713,9 +716,9 @@ void MainWindow::on_addAttachment_clicked()
 //清空附件
 void MainWindow::delete_all_attachment()
 {
-    if(fileList.size()>0)
+    if(test.fileList.size()>0)
     {
-        fileList.clear();
+        test.fileList.clear();
         QList<QPushButton*> btns= ui->attachFrame->findChildren<QPushButton*>();
         foreach (QPushButton* btn, btns)
         {   delete btn;  }

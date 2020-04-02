@@ -43,13 +43,15 @@ vector<readLetterSimple> allLetter;      //所有邮件的全部信息，一个r
 string currentLetter;           //指示当前页面显示的信的编号
 DataBase account;           //存储用户信息的数据库
 QVector<Remember> accountResult;        //所有用户信息
-list<string>fileList;       //储存附件文件名
+
 QVector<QPushButton*>fileButtonList;
 
 
 void displayLetter(QString id);      //在邮件列表里显示一封信
 void removeLetter(QString id);      //在邮件列表里删除一封信
 void loadAccount();
+private:
+    MIMEMail test;
 private slots:
     void on_nextHello_clicked();
 
