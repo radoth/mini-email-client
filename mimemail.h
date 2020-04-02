@@ -1,7 +1,7 @@
 #ifndef MIMEMAIL_H
 #define MIMEMAIL_H
 #include<string>
-#include<QList>
+#include<list>
 using namespace std;
 class Mail      //smtp模块发信时，提供一个mail对象作为必要的信息
 {
@@ -89,7 +89,7 @@ private:
     };
 
     //储存所有MIME段的List
-    QList <MIMEPart> m_MIMEPartList;
+    list <MIMEPart> m_MIMEPartList;
 
     class MIMETypeManager
     {

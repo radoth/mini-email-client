@@ -1,10 +1,13 @@
 #include "mimemail.h"
 
+//非MIME格式信件体内容直接从文本框中获得
 void Mail::prepare_body()
 {
 
 
 }
+
+// 非MIME格式信头
 void Mail::prepare_header()
 {
     //string header;
@@ -43,10 +46,10 @@ void Mail::prepare_header()
 
 }
 
-
+//整理信件格式
 void Mail::FormatTheMessage()
 {
-    //prepare_body();
+    prepare_body();
     prepare_header();
 }
 
@@ -57,15 +60,9 @@ MIMEMail::MIMEMail()
     m_sPartBoundary =  "ZYCSDLzhangyuanchishidalao" ;
     m_sNoMIMEText = "This is a multi-part message in MIME format." ;
 
-
-    /*CMIMEContentAgent* pType;
-    pType = new CTextPlain( TEXT_PLAIN, GetCharsPerLine() );
-    register_mime_type( pType );
-    pType = new CAppOctetStream( APPLICATION_OCTETSTREAM );
-    register_mime_type( pType );*/
 }
 
-
+//信头中加上MIME部分
 void MIMEMail::prepare_header()
 {
     Mail::prepare_header();
@@ -74,7 +71,7 @@ void MIMEMail::prepare_header()
     header = header + mimeVersion + content;
 }
 
-
+// 整理MIME信件体
 void MIMEMail::prepare_body()
 {
    /* Mail::prepare_header();
@@ -82,3 +79,24 @@ void MIMEMail::prepare_body()
     string content = "Content-Type: "+m_sMIMEContentType+";"+"boundary="+m_sPartBoundary+"\r\n";
     header = header + mimeVersion + content;*/
 }
+
+// 添加MIME部分内容
+// 默认类型为 application/ oct_stream; 默认编码方式为Base64
+ bool MIMEMail::AddMIMEPart(string szContent, int nContentType, string szParameters, int nEncoding, bool bPath)
+ {
+
+     MIMEPart part;
+     part.m_nContentType = nContentType;
+     part.m_sParameters = szParameters;
+     part.m_nEncoding = nEncoding;
+     part.m_bPath = bPath;
+     part.m_sContent = szContent;
+     //part.m_sContent.TrimLeft();
+     //part.m_sContent.TrimRight();
+     if( nContentType == TEXT_PLAIN )
+         m_MIMEPartList.push_front(part);
+     else
+         m_MIMEPartList.push_back(part);
+     return true;
+
+ }

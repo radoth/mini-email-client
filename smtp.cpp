@@ -1,7 +1,7 @@
 #include "smtp.h"
 #include "mimemail.h"
 
-bool SendMail::sendMail(Mail my)    //发送一封邮件
+bool SendMail::sendMail(MIMEMail my)    //发送一封邮件
 {
     try {
         cout << "正在发送......" << endl;
@@ -35,7 +35,7 @@ bool SendMail::sendMail(Mail my)    //发送一封邮件
 
 }
 
-void SendMail::sendAMail(Mail my)
+void SendMail::sendAMail(MIMEMail my)
 {
     Sock mysock;
     int resCode;        //建立连接
