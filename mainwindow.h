@@ -6,6 +6,7 @@
 #include<QTreeWidgetItem>
 #include<QListWidgetItem>
 #include"mimemail.h"
+#include<QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,6 +28,7 @@ public:
     QPoint mouse_relative_pos;      //拖拽窗口用的
     void UpdateLetter();      //更新，收取全部邮件
     void animation(QWidget *o);         //实现动画
+    QFrame * attachment_item(QString fileName);
 
           //下面几个字符串是重要的变量，所有收发邮件都要用到这些字符串
 string smtpServer;      //smtp服务器
@@ -40,6 +42,8 @@ vector<readLetterSimple> allLetter;      //所有邮件的全部信息，一个r
 string currentLetter;           //指示当前页面显示的信的编号
 DataBase account;           //存储用户信息的数据库
 QVector<Remember> accountResult;        //所有用户信息
+list<string>fileList;       //储存附件文件名
+
 
 void displayLetter(QString id);      //在邮件列表里显示一封信
 void removeLetter(QString id);      //在邮件列表里删除一封信
@@ -96,6 +100,8 @@ private slots:
     void on_accountList_itemDoubleClicked(QListWidgetItem *item);
 
     void on_newAccount_clicked();
+
+    void on_addAttachment_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -660,3 +660,45 @@ void MainWindow::on_newAccount_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
+
+void MainWindow::on_addAttachment_clicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(this);
+    if(filePath!="")
+    {
+        if(fileList.size() == 4)
+        {
+            QMessageBox::information(NULL, "Warning", "最多只能添加4个附件！",QMessageBox::Yes);
+            return;
+        }
+        fileList.push_back(filePath.toStdString());
+
+        //分割出文件名
+        QString fileName = filePath.section("/",-1);
+        if(fileName.length()>(fileName.mid(0,4).length()+fileName.section(".",-1).length()+1))
+        {
+            fileName = fileName.mid(0,4)+"…"+fileName.section(".",-1);
+        }
+
+        //设置附件图标按钮样式
+        QPushButton *attachment = new QPushButton(fileName, ui->attachFrame);
+        attachment->setIcon(QIcon(":/new/prefix1/image/file.png"));
+        attachment->resize(150,40);
+        attachment->setStyleSheet("QPushButton {border:none; font: 9pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
+        attachment->move((fileList.size()-1)*160,0);
+
+        QVBoxLayout *layout = new QVBoxLayout( ui->attachFrame);
+        layout->addWidget( attachment );
+        attachment->show();
+
+        qDebug()<<"filename : "<<fileName;
+
+
+    }
+    qDebug()<<"filePath : "<<filePath;
+}
+
+
+
+
+

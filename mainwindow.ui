@@ -39,7 +39,7 @@ background-color: rgb(255, 255, 255);
 </string>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>7</number>
    </property>
    <widget class="QWidget" name="welcome">
     <property name="styleSheet">
@@ -1157,9 +1157,9 @@ border:2px solid grey;</string>
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>100</y>
+       <y>90</y>
        <width>681</width>
-       <height>21</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -1408,9 +1408,9 @@ background:transparent;
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>100</y>
+       <y>90</y>
        <width>681</width>
-       <height>21</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -1875,6 +1875,9 @@ QPushButton:hover{
           <property name="styleSheet">
            <string notr="true">border:none;</string>
           </property>
+          <property name="text">
+           <string/>
+          </property>
           <property name="placeholderText">
            <string>必填 </string>
           </property>
@@ -2129,7 +2132,7 @@ QPushButton:hover{
        <x>100</x>
        <y>270</y>
        <width>671</width>
-       <height>311</height>
+       <height>271</height>
       </rect>
      </property>
      <property name="font">
@@ -2394,6 +2397,84 @@ QPushButton:hover{
       </property>
      </widget>
     </widget>
+    <widget class="QFrame" name="attachFrame">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>550</y>
+       <width>681</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QPushButton" name="addAttachment">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{
+border:none;
+background:transparent;
+}
+
+
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="image.qrc">
+       <normaloff>:/new/prefix1/image/attach.png</normaloff>:/new/prefix1/image/attach.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+    </widget>
     <zorder>layoutWidget</zorder>
     <zorder>label_30</zorder>
     <zorder>label_31</zorder>
@@ -2407,6 +2488,8 @@ QPushButton:hover{
     <zorder>draft</zorder>
     <zorder>back_2</zorder>
     <zorder>hideFrame</zorder>
+    <zorder>attachFrame</zorder>
+    <zorder>addAttachment</zorder>
    </widget>
    <widget class="QWidget" name="deleteMode">
     <property name="styleSheet">
@@ -2762,6 +2845,8 @@ QPushButton:hover{
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
  <connections/>
 </ui>

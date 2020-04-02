@@ -18,6 +18,8 @@
         <file>image/get.png</file>
         <file>image/cc.png</file>
         <file>image/account.png</file>
+        <file>image/attach.png</file>
+        <file>image/file.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
