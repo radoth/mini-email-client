@@ -16,7 +16,26 @@ bool AppOctetStream::AppendPart(string szContent,
                                  bool bPath,
                                  string & sDestination)
 {
-    cout<<"attachment send!";
+    QFile fAttachment(QString::fromStdString(szContent));
+
+    if( szContent == "" )
+        return false;
+    if( szContent == "" )
+        return false;
+
+    if(!fAttachment.open(QIODevice::ReadOnly))
+    {
+        return false;
+    }
+
+    sDestination +=build_sub_header(szContent,szParameters,nEncoding,true);
+
+    //用base64进行编码
+    attach_file( &fAttachment, 4, sDestination,szContent );
+
+    fAttachment.close();
+
+    //cout<<"attachment send!";
    /* CStdioFile fAttachment;
 
     ASSERT( szContent != NULL );
@@ -41,6 +60,36 @@ string AppOctetStream::build_sub_header(string szContent,
                                           int nEncoding,
                                           bool bPath)
 {
+    string sSubHeader;
+    string sTemp;
+
+    //截取文件名
+    QString QPath = QString::fromStdString(szContent);
+    QString QfileName = QPath.section("/",-1);
+    string fileName = QfileName.toStdString();
+
+    if( bPath )
+    {
+        sTemp = "; file="+ fileName;
+    }
+    else
+    {
+        sTemp = "" ;
+    }
+
+    sSubHeader = "Content-Type: "+GetContentTypeString()+sTemp+"\r\n";
+
+    sSubHeader += "Content-Transfer-Encoding: base64\r\n" ;
+
+    sTemp = "Content-Disposition: attachment; filename="+fileName+"\r\n";
+    sSubHeader+=sTemp;
+    sSubHeader +="\r\n";
+
+
+    return sSubHeader;
+
+
+
     /*
     string sSubHeader;
     string sTemp;
@@ -78,11 +127,22 @@ string AppOctetStream::GetContentTypeString()
 }
 
 // Caller is responsible for opening and closing the file
-/*void AppOctetStream::attach_file(CStdioFile* pFileAtt,
+void AppOctetStream::attach_file(QFile* pFileAtt,
                                   int nEncoding,
-                                  string & sDestination)
+                                  string & sDestination,string filePath)
 {
-    CMIMECode* pEncoder;
+
+    if( pFileAtt == NULL )
+        return;
+
+
+    QByteArray content =  pFileAtt->readAll();
+    QString b64Content = content.toBase64();
+    sDestination +=b64Content.toStdString();
+    sDestination +=  "\r\n" ;
+
+
+  /*  CMIMECode* pEncoder;
     int nBytesRead;
     TCHAR szBuffer[ BYTES_TO_READ + 1 ];
 
@@ -124,7 +184,6 @@ string AppOctetStream::GetContentTypeString()
         sDestination += _T( "\r\n" );
     } while( nBytesRead == BYTES_TO_READ );
     sDestination += _T( "\r\n" );
-    delete pEncoder;
+    delete pEncoder;*/
 }
 
-*/

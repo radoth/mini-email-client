@@ -66,10 +66,10 @@ string TextPlain::wrap_text(string szText)
     if( szText == "" )
         return sTemp;
     sTemp = szText;
+
+    //base64编码
     unsigned int sizes = sTemp.length();
-
     unsigned const char * sEncode =  (const unsigned char*)sTemp.c_str();
-
     sTemp = base64_encode(sEncode,sizes);
 
     return sTemp;

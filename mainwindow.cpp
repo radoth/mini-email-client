@@ -511,6 +511,10 @@ void MainWindow::on_send_clicked()    //发送按钮
         ui->stackedWidget->setCurrentIndex(5);
         //ui->send->setText(QString::fromLocal8Bit("发送"));
         ui->send->setEnabled(true);
+
+        delete_all_attachment();
+
+
 }
 
 /*-----------------页面跳转----------------------*/

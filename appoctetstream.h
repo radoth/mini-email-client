@@ -3,6 +3,8 @@
 #include<string>
 #include<iostream>
 #include"mimecontent.h"
+#include<QString>
+#include<QFile>
 using namespace std;
 
 class AppOctetStream:public MIMEContent
@@ -21,7 +23,7 @@ public:
                              string& sDestination );
 
 protected:
-    //virtual void attach_file( CStdioFile* pFileAtt, int nEncoding, string& sDestination );
+    virtual void attach_file( QFile* pFileAtt, int nEncoding, string& sDestination,string filePath );
     virtual string build_sub_header( string szContent,
                                       string szParameters,
                                       int nEncoding,

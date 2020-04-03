@@ -106,6 +106,8 @@ void SendMail::sendAMail(MIMEMail my)
     mysock.sendSocket(all.c_str());    //发送数据
     mysock.sendSocket(".\r\n");
 
+
+
     resCode = getResponseCode(&mysock);
     //cout << resCode << endl;
     checkError(resCode);
