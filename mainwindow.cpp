@@ -682,6 +682,32 @@ void MainWindow::on_addAttachment_clicked()
             return;
         }*/
 
+        //查看文件大小,kb
+        QFileInfo attach(filePath);
+        qint64 size = attach.size();
+        qint64 sizekb = size/1024;
+
+
+        //附件大小不得超过50kb
+        if(sizekb>50)
+        {
+            QMessageBox::information(NULL, "提示", "附件大小不能超过50kb!",QMessageBox::Yes);
+            return;
+        }
+
+        QString fileSize;
+
+        if(sizekb<1)
+        {
+            fileSize = tr("%1").arg(size)+"b";
+
+        }
+        else
+        {
+            fileSize = tr("%1").arg(sizekb)+"kb";
+        }
+
+
         //保存附件路径
         test.fileList.push_back(filePath.toStdString());
 
@@ -699,10 +725,12 @@ void MainWindow::on_addAttachment_clicked()
         }
 
         //设置附件图标按钮样式
-        QPushButton *attachment = new QPushButton(fileName, ui->attachFrame);
+        QPushButton *attachment = new QPushButton(fileName+"\n"+fileSize, ui->attachFrame);
         attachment->setIcon(QIcon(":/new/prefix1/image/file.png"));
         attachment->resize(150,40);
-        attachment->setStyleSheet("QPushButton {border:none; font: 9pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
+
+        attachment->setIconSize(QSize(30,40));
+        attachment->setStyleSheet("QPushButton {border:none; font: 8pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
         attachment->move((test.fileList.size()-1)%4*160,(test.fileList.size()-1)/4*50);
 
         attachment->show();

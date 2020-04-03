@@ -18,8 +18,7 @@ bool AppOctetStream::AppendPart(string szContent,
 {
     QFile fAttachment(QString::fromStdString(szContent));
 
-    if( szContent == "" )
-        return false;
+
     if( szContent == "" )
         return false;
 
@@ -28,29 +27,21 @@ bool AppOctetStream::AppendPart(string szContent,
         return false;
     }
 
+    //qDebug()<<"\n"<<QString::fromStdString( sDestination)<<"\n";
+
+
     sDestination +=build_sub_header(szContent,szParameters,nEncoding,true);
+
+    //qDebug()<<"\n"<<QString::fromStdString( sDestination)<<"\n";
+
 
     //用base64进行编码
     attach_file( &fAttachment, 4, sDestination,szContent );
 
+
     fAttachment.close();
 
-    //cout<<"attachment send!";
-   /* CStdioFile fAttachment;
 
-    ASSERT( szContent != NULL );
-    // This class handles only file attachments, so
-    // it ignores the bPath parameter.
-    if( szContent == NULL )
-        return false;
-    if( !fAttachment.Open( szContent, (CFile::modeRead | CFile::shareDenyWrite | CFile::typeBinary) ) )
-        return false;
-    sDestination += build_sub_header( szContent,
-                                      szParameters,
-                                      nEncoding,
-                                      TRUE );
-    attach_file( &fAttachment, CMIMEMessage::BASE64, sDestination );
-    fAttachment.Close();*/
     return true;
 }
 
@@ -77,6 +68,8 @@ string AppOctetStream::build_sub_header(string szContent,
         sTemp = "" ;
     }
 
+
+
     sSubHeader = "Content-Type: "+GetContentTypeString()+sTemp+"\r\n";
 
     sSubHeader += "Content-Transfer-Encoding: base64\r\n" ;
@@ -84,39 +77,12 @@ string AppOctetStream::build_sub_header(string szContent,
     sTemp = "Content-Disposition: attachment; filename="+fileName+"\r\n";
     sSubHeader+=sTemp;
     sSubHeader +="\r\n";
+     const char * sEncode =  (const  char*)sSubHeader.c_str();
 
+    sSubHeader = UTF8ToGBK(sEncode);
 
     return sSubHeader;
 
-
-
-    /*
-    string sSubHeader;
-    string sTemp;
-    TCHAR szFName[ _MAX_FNAME ];
-    TCHAR szExt[ _MAX_EXT ];
-
-    _tsplitpath( szContent, NULL, NULL, szFName, szExt );
-
-    // This class ignores szParameters and nEncoding.
-    // It controls its own parameters and only handles
-    // Base64 encoding.
-    if( bPath )
-        sTemp.Format( "; file=%s%s", szFName, szExt );
-    else
-        sTemp = _T( "" );
-    sSubHeader.Format( _T( "Content-Type: %s%s\r\n" ),
-                        (string)GetContentTypeString(),
-                        (string)sTemp );
-    sSubHeader += _T( "Content-Transfer-Encoding: base64\r\n" );
-    sTemp.Format( _T( "Content-Disposition: attachment; filename=%s%s\r\n" ),
-                  szFName, szExt );
-    sSubHeader += sTemp;
-    // Signal end of sub-header.
-    sSubHeader += _T( "\r\n" ); // Warning: numerous concatenations
-                                // are inefficient.
-    return sSubHeader;
-    */
 }
 
 string AppOctetStream::GetContentTypeString()
@@ -136,11 +102,26 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
         return;
 
 
-    QByteArray content =  pFileAtt->readAll();
-    QString b64Content = content.toBase64();
-    sDestination +=b64Content.toStdString();
+
+
+    QByteArray content;
+
+    while(!pFileAtt->atEnd())
+    {
+        QByteArray temp = pFileAtt->readLine();
+        //qDebug()<<"\n"<<temp<<"\n\n\n\n";
+        QString sTemp = temp.toBase64();
+        sDestination +=sTemp.toStdString();
+    }
+
+    qDebug()<<"\n\nbodysize:\n"<<sDestination.size()<<"\n";
+
+
+    //QString b64Content = content.toBase64();
+    //sDestination +=b64Content.toStdString();
     sDestination +=  "\r\n" ;
 
+    //qDebug()<<"\n\n\nQByteArray"<<content<<"\n\n\n\n";
 
   /*  CMIMECode* pEncoder;
     int nBytesRead;

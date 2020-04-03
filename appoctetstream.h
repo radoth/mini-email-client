@@ -5,6 +5,12 @@
 #include"mimecontent.h"
 #include<QString>
 #include<QFile>
+#include<QDataStream>
+#include"base64.h"
+
+
+#define MAXBUF 58
+
 using namespace std;
 
 class AppOctetStream:public MIMEContent

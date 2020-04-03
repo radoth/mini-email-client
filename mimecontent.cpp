@@ -1,4 +1,6 @@
 #include "mimecontent.h"
+#include <iostream>
+
 
 MIMEContent::MIMEContent(int nMIMEType)
 {
@@ -16,4 +18,8 @@ bool MIMEContent::QueryType(int nContentType)
 {
     return nContentType == m_nMIMETypeIHandle ? true : false;
 }
+
+
+
+
 
