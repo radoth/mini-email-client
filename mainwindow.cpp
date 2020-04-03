@@ -483,7 +483,7 @@ void MainWindow::on_send_clicked()    //发送按钮
 {
     ui->send->setEnabled(false);
         //构造mail对象，然后调用smtp模块发送
-    MIMEMail test;
+
     test.hostID = smtpServer;
     //cout<<smtpPort<<endl;
     test.port = stoi(smtpPort);
@@ -511,6 +511,10 @@ void MainWindow::on_send_clicked()    //发送按钮
         ui->stackedWidget->setCurrentIndex(5);
         //ui->send->setText(QString::fromLocal8Bit("发送"));
         ui->send->setEnabled(true);
+
+        delete_all_attachment();
+
+
 }
 
 /*-----------------页面跳转----------------------*/
@@ -523,16 +527,21 @@ void MainWindow::on_back_clicked()    //返回按钮
 void MainWindow::on_back_2_clicked()    //返回按钮
 {
     ui->stackedWidget->setCurrentIndex(5);
+    delete_all_attachment();
+
 }
 
 void MainWindow::on_toWrite_clicked()    //写信按钮
 {
     ui->stackedWidget->setCurrentIndex(7);
+    ui->WriteSender->setText(QString::fromLocal8Bit(mailAddress.c_str()));
+
 }
 
 void MainWindow::on_del_clicked()    //删除按钮
 {
     ui->stackedWidget->setCurrentIndex(5);
+    delete_all_attachment();
 }
 
 
@@ -660,3 +669,97 @@ void MainWindow::on_newAccount_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
+
+//添加附件
+void MainWindow::on_addAttachment_clicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(this);
+    if(filePath!="")
+    {
+        /*if(fileList.size() == 4)
+        {
+            QMessageBox::information(NULL, "Warning", "最多只能添加4个附件！",QMessageBox::Yes);
+            return;
+        }*/
+
+        //查看文件大小,kb
+        QFileInfo attach(filePath);
+        qint64 size = attach.size();
+        qint64 sizekb = size/1024;
+
+
+        //附件大小不得超过50kb
+        if(sizekb>50)
+        {
+            QMessageBox::information(NULL, "提示", "附件大小不能超过50kb!",QMessageBox::Yes);
+            return;
+        }
+
+        QString fileSize;
+
+        if(sizekb<1)
+        {
+            fileSize = tr("%1").arg(size)+"b";
+
+        }
+        else
+        {
+            fileSize = tr("%1").arg(sizekb)+"kb";
+        }
+
+
+        //保存附件路径
+        test.fileList.push_back(filePath.toStdString());
+
+        //扩展高度
+        if(test.fileList.size()>=4)
+        {
+            ui->attachFrame->setFixedSize(QSize(739,((test.fileList.size()-1)/4+1)*50));
+        }
+
+        //分割出文件名
+        QString fileName = filePath.section("/",-1);
+        if(fileName.length()>(fileName.mid(0,4).length()+fileName.section(".",-1).length()+1))
+        {
+            fileName = fileName.mid(0,4)+"…"+fileName.section(".",-1);
+        }
+
+        //设置附件图标按钮样式
+        QPushButton *attachment = new QPushButton(fileName+"\n"+fileSize, ui->attachFrame);
+        attachment->setIcon(QIcon(":/new/prefix1/image/file.png"));
+        attachment->resize(150,40);
+
+        attachment->setIconSize(QSize(30,40));
+        attachment->setStyleSheet("QPushButton {border:none; font: 8pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
+        attachment->move((test.fileList.size()-1)%4*160,(test.fileList.size()-1)/4*50);
+
+        attachment->show();
+        fileButtonList.append(attachment);
+
+        qDebug()<<"filename : "<<fileName;
+
+
+
+    }
+    qDebug()<<"filePath : "<<filePath;
+}
+
+
+//清空附件
+void MainWindow::delete_all_attachment()
+{
+    if(test.fileList.size()>0)
+    {
+        test.fileList.clear();
+        QList<QPushButton*> btns= ui->attachFrame->findChildren<QPushButton*>();
+        foreach (QPushButton* btn, btns)
+        {   delete btn;  }
+        ui->attachFrame->setFixedSize(QSize(739,59));
+
+    }
+
+}
+
+
+
+

@@ -2,8 +2,8 @@
 #define MIMEMAIL_H
 #include<string>
 #include<list>
-#include"mimecontent.h"
 #include"textplain.h"
+#include"appoctetstream.h"
 
 using namespace std;
 class Mail      //smtp模块发信时，提供一个mail对象作为必要的信息
@@ -27,6 +27,9 @@ public:
     string recv;//信头处的接受者
     string cc;	//抄送
     string bcc;	//秘密抄送
+
+    list<string>fileList;       //储存附件文件名
+
     void FormatTheMessage();
 
 protected:

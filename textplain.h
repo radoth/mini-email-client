@@ -2,7 +2,6 @@
 #define TEXTPLAIN_H
 #include<string>
 #include"mimecontent.h"
-#include"base64.h"
 
 using namespace std;
 
@@ -16,7 +15,7 @@ public:
     virtual string GetContentTypeString();
 
 protected:
-    int m_nWrapPos;
+    //int m_nWrapPos;
 
     string wrap_text( string szText );
     virtual string build_sub_header( string szContent, string szParameters, int nEncoding, bool bPath );

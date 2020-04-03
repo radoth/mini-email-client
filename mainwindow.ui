@@ -39,7 +39,7 @@ background-color: rgb(255, 255, 255);
 </string>
    </property>
    <property name="currentIndex">
-    <number>9</number>
+    <number>7</number>
    </property>
    <widget class="QWidget" name="welcome">
     <property name="styleSheet">
@@ -1157,9 +1157,9 @@ border:2px solid grey;</string>
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>100</y>
+       <y>90</y>
        <width>681</width>
-       <height>21</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -1408,9 +1408,9 @@ background:transparent;
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>100</y>
+       <y>90</y>
        <width>681</width>
-       <height>21</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
@@ -1875,6 +1875,9 @@ QPushButton:hover{
           <property name="styleSheet">
            <string notr="true">border:none;</string>
           </property>
+          <property name="text">
+           <string/>
+          </property>
           <property name="placeholderText">
            <string>必填 </string>
           </property>
@@ -2129,7 +2132,7 @@ QPushButton:hover{
        <x>100</x>
        <y>270</y>
        <width>671</width>
-       <height>311</height>
+       <height>261</height>
       </rect>
      </property>
      <property name="font">
@@ -2394,6 +2397,149 @@ QPushButton:hover{
       </property>
      </widget>
     </widget>
+    <widget class="QPushButton" name="addAttachment">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{
+border:none;
+background:transparent;
+}
+
+
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="image.qrc">
+       <normaloff>:/new/prefix1/image/attach.png</normaloff>:/new/prefix1/image/attach.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QScrollArea" name="attachScrollArea">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>540</y>
+       <width>741</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QScrollArea
+{
+	border-color:rgb(0, 255, 255);
+}
+
+QScrollBar:vertical
+{
+    width:8px;
+    background:rgba(0,0,0,0%);
+    margin:0px,0px,0px,0px;
+    padding-top:9px;   
+    padding-bottom:9px;
+}
+QScrollBar::handle:vertical
+{
+    width:8px;
+    background:rgba(0,0,0,25%);
+    border-radius:4px;   
+    min-height:20;
+}
+QScrollBar::handle:vertical:hover
+{
+    width:8px;
+    background:rgba(0,0,0,50%);   
+    border-radius:4px;
+    min-height:20;
+}
+QScrollBar::add-line:vertical  
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/3.png);
+    subcontrol-position:bottom;
+}
+QScrollBar::sub-line:vertical  
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/1.png);
+    subcontrol-position:top;
+}
+QScrollBar::add-line:vertical:hover  
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/4.png);
+    subcontrol-position:bottom;
+}
+QScrollBar::sub-line:vertical:hover  
+{
+    height:9px;width:8px;
+    border-image:url(:/images/a/2.png);
+    subcontrol-position:top;
+}
+QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical   
+{
+    background:rgba(0,0,0,10%);
+    border-radius:4px;
+}</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="attachFrame">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>739</width>
+        <height>59</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="leftMargin">
+        <number>35</number>
+       </property>
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
     <zorder>layoutWidget</zorder>
     <zorder>label_30</zorder>
     <zorder>label_31</zorder>
@@ -2407,6 +2553,8 @@ QPushButton:hover{
     <zorder>draft</zorder>
     <zorder>back_2</zorder>
     <zorder>hideFrame</zorder>
+    <zorder>addAttachment</zorder>
+    <zorder>attachScrollArea</zorder>
    </widget>
    <widget class="QWidget" name="deleteMode">
     <property name="styleSheet">
@@ -2762,6 +2910,8 @@ QPushButton:hover{
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
  <connections/>
 </ui>

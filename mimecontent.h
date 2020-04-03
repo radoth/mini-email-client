@@ -1,6 +1,9 @@
 #ifndef MIMECONTENT_H
 #define MIMECONTENT_H
 #include<string>
+#include"base64.h"
+#include<QDebug>
+
 using namespace std;
 
 
