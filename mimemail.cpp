@@ -81,7 +81,7 @@ void MIMEMail::prepare_header()
 {
     Mail::prepare_header();
     string mimeVersion = "MIME-Version: 1.0\r\n";
-    string content = "Content-Type: "+m_sMIMEContentType+";"+"boundary="+m_sPartBoundary+"\r\n";
+    string content = "Content-Type: "+m_sMIMEContentType+";"+"boundary="+m_sPartBoundary;
     header = header + mimeVersion + content;
 }
 

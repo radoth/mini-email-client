@@ -2,6 +2,11 @@
 #include <iostream>
 #include <string>
 #include <regex>
+#include<list>
+#include<QString>
+#include<QRegExp>
+#include<QDebug>
+
 using namespace std;
 
 class readLetterSimple {      //一个readLetterSimple对象包含一封信的全部信息
@@ -13,7 +18,10 @@ public:
     string to;      //收件人
     string date;      //日期
     string junk;      //临时变量
-    string content;      //正文
+    string body;      //正文
+    string header;    //信头
+    string contentType; //MIME类型
+    string contentEncode; //MIME编码
     string displayID;      //邮件id，删除和查看邮件用
     void debug();      //调试输出信息
 
@@ -24,7 +32,23 @@ private:
 	
     void unfold();      //分割字符串
     void analysis();      //分析字符串
+    void splitHeaderBody(); //分割header和body并保存
     bool match(string source, const char *reg, string &destination);      //匹配
+
+
+    class MIMEPart
+    {
+    public:
+        int m_nEncoding;    //编码方式
+        int m_nContentType; //类型
+        int m_nContentDisp; //形式
+        string m_sParameters;
+        bool m_bPath;
+        string m_sContent;  //内容
+    };
+
+    //储存所有MIME段的List
+    list <MIMEPart> m_MIMEPartList;
 
 
 };

@@ -400,7 +400,7 @@ void MainWindow::displayLetter(QString id)    //显示一封信
             ui->ReadRecv->setText(headerDecode((*i).to));
 
             ui->ReadTime->setText(QString::fromLocal8Bit((*i).date.c_str()));
-            ui->ReadContent->setText(QString::fromLocal8Bit((*i).content.c_str()));
+            ui->ReadContent->setText(QString::fromLocal8Bit((*i).body.c_str()));
             ui->stackedWidget->setCurrentIndex(6);
             currentLetter=id.toStdString();
             break;
@@ -486,7 +486,6 @@ void MainWindow::on_send_clicked()    //发送按钮
 {
     ui->send->setEnabled(false);
         //构造mail对象，然后调用smtp模块发送
-    string tempSubject,tempFrom,tempTo;
 
     test.hostID = smtpServer;
     //cout<<smtpPort<<endl;
@@ -497,9 +496,10 @@ void MainWindow::on_send_clicked()    //发送按钮
     test.password = password;
 
     //将From，To，Subject编码
-    /*tempSubject = ui->WriteSender->text().toLocal8Bit().toStdString();
-    tempTo = ui->WriteRecv->text().toLocal8Bit().toStdString();
-    tempFrom = ui->WriteSubject->text().toLocal8Bit().toStdString();
+    /*string tempSubject,tempFrom,tempTo;
+    tempSubject = ui->WriteSubject->text().toLocal8Bit().toStdString();
+    tempTo = ui->WriteSender->text().toLocal8Bit().toStdString();
+    tempFrom = ui->WriteRecv->text().toLocal8Bit().toStdString();
 
     unsigned int subSizes = tempSubject.length();
     unsigned const char * sEncode1 =  (const unsigned char*)tempSubject.c_str();
@@ -517,9 +517,18 @@ void MainWindow::on_send_clicked()    //发送按钮
     test.mailTo = "\"=?gb18030?B?"+tempTo+"?=\""+"<"+ui->WriteRecv->text().toLocal8Bit().toStdString()+">";
     test.subject = "=?gb18030?B?"+tempFrom+"?=";*/
 
+    //给subject编码gbk
+    string tempSubject;
+    tempSubject = ui->WriteSubject->text().toLocal8Bit().toStdString();
+    unsigned int subSizes = tempSubject.length();
+    unsigned const char * sEncode1 =  (const unsigned char*)tempSubject.c_str();
+    tempSubject = base64_encode(sEncode1,subSizes);
+
     test.mailFrom = ui->WriteSender->text().toLocal8Bit().toStdString();
     test.mailTo = ui->WriteRecv->text().toLocal8Bit().toStdString();
-    test.subject = ui->WriteSubject->text().toLocal8Bit().toStdString();
+    //test.subject =  ui->WriteSubject->text().toLocal8Bit().toStdString();
+
+    test.subject = "=?gb18030?B?"+tempSubject+"?=";
 
     test.body = ui->WriteContent->toPlainText().toLocal8Bit().toStdString();
     //cout<<test.body<<endl;

@@ -25,6 +25,7 @@ void readLetterSimple::unfold()    //字符串格式处理
 readLetterSimple::readLetterSimple(string letter)
 {
 	this->letter = letter;
+    splitHeaderBody();
     unfold();    //去折叠
     SplitString(letterAfter, letterFinal, "\r\n");    //按行分割字符串
     analysis();    //分析信头
@@ -38,7 +39,7 @@ void readLetterSimple::debug()
 	cout << "from " << from << endl;
 	cout << "to " << to << endl;
 	cout << "date " << date << endl;
-	cout << "content " << content << endl;
+    cout << "content " << body << endl;
 	cout << "==================" << endl;
 }
 
@@ -78,7 +79,7 @@ void readLetterSimple::analysis()
 			continue;
 		else if (match(*i, ".", junk))
 			continue;
-        else content.append(*i + "\n");
+        else body.append(*i + "\n");
 	}
 }
 
@@ -94,3 +95,19 @@ bool readLetterSimple::match(string source, const char * reg, string & destinati
 	else return false;
 }
 
+//分割body和header并保存
+void readLetterSimple::splitHeaderBody()
+{
+    QString letter = QString::fromStdString(this->letter);
+    //qDebug()<<"letter:"<<letter<<"\n\n";
+
+    QString sep("\r\n\r\n");
+    QString header = letter.section(sep,0,0);
+    //qDebug()<<"\nheader:"<<header;
+    QString body = letter.section(sep,1);
+    //qDebug()<<"\nbody:"<<body;
+
+    this->header = header.toStdString();
+    this->body = body.toStdString();
+
+}
