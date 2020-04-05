@@ -28,7 +28,6 @@ SOURCES += \
     mimecontent.cpp \
     mimemail.cpp \
     pop3.cpp \
-    readLetter.cpp \
     smtp.cpp \
     sock.cpp \
     textplain.cpp \
@@ -42,7 +41,6 @@ HEADERS += \
     mimecontent.h \
     mimemail.h \
     pop3.h \
-    readLetter.h \
     smtp.h \
     sock.h \
     textplain.h \
