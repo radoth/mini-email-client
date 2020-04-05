@@ -111,7 +111,7 @@ string RecvMail::uidl(int num)    //UIDL命令
 	return getResponse(mysock);
 }
 
-readLetterSimple RecvMail::retr(int num)    //RETR命令
+MIMEMail RecvMail::retr(int num)    //RETR命令
 {
 	string retr("RETR ");
 	string fin("");
@@ -136,13 +136,13 @@ readLetterSimple RecvMail::retr(int num)    //RETR命令
         }
 
 	}
-	readLetterSimple back(fin);
+    MIMEMail back(fin);
 	back.displayID = to_string(num);
 
 	return back;
 }
 
-vector<readLetterSimple> RecvMail::getMailList()    //获取所有邮件
+vector<MIMEMail> RecvMail::getMailList()    //获取所有邮件
 {
     string dat = listAll();    //得到邮件列表
 	regex reg2("^[+-].*?\r\n");
@@ -151,7 +151,7 @@ vector<readLetterSimple> RecvMail::getMailList()    //获取所有邮件
 
 	vector<string> datFinal;
     SplitString(datAfter, datFinal, "\r\n");    //字符串按行切割
-	vector<readLetterSimple> res;
+    vector<MIMEMail> res;
 
 	for (vector<string>::iterator i = datFinal.begin(); i != datFinal.end(); i++)
     {    //每一行，都对应一封邮件，获取他们的ID，插入到ReadLetterSimple的向量中

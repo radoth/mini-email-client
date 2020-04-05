@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 #include "database.h"
 #include <QWidget>
-#include"readLetter.h"
 #include<QTreeWidgetItem>
 #include<QListWidgetItem>
 #include"mimemail.h"
@@ -42,7 +41,7 @@ string pop3Port;      //pop3端口
 string mailAddress;      //邮件地址
 string userName;      //用户名
 string password;      //密码
-vector<readLetterSimple> allLetter;      //所有邮件的全部信息，一个readLetterSimple类包含一封邮件
+vector<MIMEMail> allLetter;      //所有邮件的全部信息，一个readLetterSimple类包含一封邮件
 string currentLetter;           //指示当前页面显示的信的编号
 DataBase account;           //存储用户信息的数据库
 QVector<Remember> accountResult;        //所有用户信息

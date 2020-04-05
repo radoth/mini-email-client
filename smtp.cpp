@@ -69,7 +69,7 @@ void SendMail::sendAMail(MIMEMail my)
         //throw 6;
 
     mysock.sendSocket("MAIL FROM:<");    //发送发件人
-    mysock.sendSocket(my.mailFrom.c_str());
+    mysock.sendSocket(my.from.c_str());
     mysock.sendSocket(">");
     mysock.sendSocket("\r\n");
 
@@ -80,7 +80,7 @@ void SendMail::sendAMail(MIMEMail my)
         //throw 7;
 
     mysock.sendSocket("RCPT TO:<");
-    mysock.sendSocket(my.mailTo.c_str());    //发送收件人
+    mysock.sendSocket(my.to.c_str());    //发送收件人
     mysock.sendSocket(">");
     mysock.sendSocket("\r\n");
 
@@ -161,49 +161,6 @@ void SendMail::checkError(int err)    //错误代码检查，待完善
     default:break;
     }
 }
-/*
-string SendMail::generateSimpleHead(Mail my)    //生成信头
-{
-    string header;
-    string from("From:");
-    from = from + my.mailFrom + "\r\n";
-
-    if (my.recv.empty())
-        my.recv = my.mailTo;
-    //默认是mailto处的发件人
-
-    string to("TO:");
-    to = to + my.recv + "\r\n";
-
-    string cc("");
-    if (!my.cc.empty())
-    {
-        cc = "Cc:" + my.cc + "\r\n";
-    }
-
-    string bcc("");
-    if (!my.bcc.empty())
-    {
-        bcc = "Bcc:" + my.bcc + "\r\n";
-    }
-
-    string dat("");
-    //待完善
-
-    string subject("");
-    if (!my.subject.empty())
-    {
-        subject = "Subject:" + my.subject + "\r\n";
-    }
-
-    header  =from + to + cc + bcc + dat + subject;
-    string mimeVersion;
-    mimeVersion = "MIME-Version: 1.0\r\n";
-    //string content = "Content-Type: "+m_sMIMEContentType+";"+"boundary="+m_sPartBoundary+"\r\n";
-    //string a = MIMEMail::m_sMIMEContentType
-
-    return header;
-}*/
 
 int SendMail::getResponseCode(Sock * mySock)
 {

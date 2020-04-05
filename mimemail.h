@@ -4,11 +4,21 @@
 #include<list>
 #include"textplain.h"
 #include"appoctetstream.h"
+#include <regex>
+#include<QString>
+#include<QRegExp>
+#include<QDebug>
 
 using namespace std;
+
+
 class Mail      //smtp模块发信时，提供一个mail对象作为必要的信息
 {
 public:
+    Mail();
+    Mail(string letter);
+
+
     string hostID;      //smtp服务器地址
     int port;      //端口号
     string localName;      //主机名
@@ -16,8 +26,8 @@ public:
     string username;      //用户名
     string password;      //密码
 
-    string mailFrom;//发信人
-    string mailTo;//收信人
+    string from;//发信人
+    string to;//收信人
 
     string subject;      //主题
     string header;      //信头
@@ -28,22 +38,42 @@ public:
     string cc;	//抄送
     string bcc;	//秘密抄送
 
+    /*--------------------readLetter中新加入部分---------------------*/
+    string received;      //接受主机
+    string date;      //日期
+    string junk;      //临时变量
+    string displayID;      //邮件id，删除和查看邮件用
+    /*--------------------------------------------------------------*/
 
+    //组装信件
     void FormatTheMessage();
+
 
 protected:
     virtual void prepare_header();
     virtual void prepare_body();
 
+    /*--------------------readLetter中新加入部分---------------------*/
+    //变量
+    string letter;      //原始字符串
+    string letterAfter;      //去除换行
+    vector<string> letterFinal;      //去除信头
+    /*--------------------------------------------------------------*/
 };
 
 class MIMEMail:public Mail
 {
 public:
+    MIMEMail(string letter);
     MIMEMail();
 
+    //解析邮件
+    void DecodeTheMessage();
+
+    string m_sNoMIMEText;    //信件体MIME格式声明语句
     string m_sPartBoundary;//分割线内容
     string m_sMIMEContentType;//MIME段内容类型
+    list<string>fileList;    //储存附件文件名
 
     // MIME Type Codes
     enum eMIMETypeCode
@@ -63,23 +93,14 @@ public:
         NEXT_FREE_ENCODING_CODE
     };
 
-    //增加MIME部分
-    bool AddMIMEPart( string szContent,
-                      int nContentType = APPLICATION_OCTETSTREAM,
-                      string szParameters = "" ,
-                      int nEncoding = BASE64,
-                      bool bPath = true );
 
-    //储存附件文件名
-    list<string>fileList;
+
 
 protected:
+    /*-----------------MIME编码----------------------------*/
+    //向m_MIMETypeList中增加类型
     void register_mime_type( MIMEContent* pMIMEType );
 
-    //插入MIME段分割线
-    void insert_boundary( string& sText );
-    //插入body尾部
-    void insert_message_end(string &body);
     //将邮件转化为MIME格式
     void append_mime_parts();
 
@@ -88,8 +109,31 @@ protected:
     //将信体格式化
     virtual void prepare_body();
 
-    //信件体MIME格式声明语句
-    string m_sNoMIMEText;
+    //插入MIME段分割线
+    void insert_boundary( string& sText );
+    //插入body尾部
+    void insert_message_end(string &body);
+
+
+    //向m_MIMEPartList加入body的mime段
+    bool AddMIMEPart( string szContent,
+                      int nContentType = APPLICATION_OCTETSTREAM,
+                      string szParameters = "" ,
+                      int nEncoding = BASE64,
+                      bool bPath = true );
+    /*-----------------------------------------------------------*/
+
+
+    /*------------------------MIME解析----------------------------*/
+    //函数
+    void unfold();      //分割字符串
+    void analysis();      //分析字符串
+    void splitHeaderBody(); //分割header和body并保存
+    bool match(string source, const char *reg, string &destination);      //匹配
+    void debug();
+    /*-----------------------------------------------------------*/
+
+
 
 private:
     //MIME段部分
@@ -104,13 +148,17 @@ private:
     };
 
 
-
-
     //储存所有MIME段的List
     list <MIMEPart> m_MIMEPartList;
 
     //储存所有MIME类型
     list <MIMEContent*> m_MIMETypeList;
+
+
+
 };
+
+void SplitString(const std::string& s, std::vector<std::string>& v, const std::string& c);      //字符串分割
+
 
 #endif // MIMEMAIL_H

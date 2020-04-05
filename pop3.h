@@ -3,7 +3,7 @@
 #include<string>
 #include"sock.h"
 #include<regex>
-#include"readLetter.h"
+#include"mimemail.h"
 #include"base64.h"
 #include"QtDebug"
 using namespace std;
@@ -32,8 +32,8 @@ public:
     string top(int num,int row);      //TOP命令
     string uidl(int num);      //UIDL命令
     int mailCountRealTime;      //计数，现在收到了几封信
-    readLetterSimple retr(int num);      //RETR命令
-    vector<readLetterSimple> getMailList();      //获取所有邮件的信息
+    MIMEMail retr(int num);      //RETR命令
+    vector<MIMEMail> getMailList();      //获取所有邮件的信息
     void dele(int num);      //删信
 
 private:

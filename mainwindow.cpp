@@ -282,7 +282,7 @@ void MainWindow::on_UpdateDone()    //在更新邮件操作完成后
     ui->toMainPage->setEnabled(true);
     ui->stackedWidget->setCurrentIndex(5);    //进入主界面
         //用新的allLetter更新邮件列表
-    for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
+    for (vector<MIMEMail>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
         //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
@@ -346,7 +346,7 @@ cout<<"error occured!";
 
     ui->toMainPage->setEnabled(true);
     ui->stackedWidget->setCurrentIndex(5);
-    for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
+    for (vector<MIMEMail>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
         //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
@@ -389,7 +389,7 @@ void MainWindow::on_mailList_itemDoubleClicked(QTreeWidgetItem *item, int column
 void MainWindow::displayLetter(QString id)    //显示一封信
 {
     //在所有的信里查找标号是id的信，然后显示
-    for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
+    for (vector<MIMEMail>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {
         string thisOne=(*i).displayID;
         //cout<<thisOne<<" for serach";
@@ -416,7 +416,7 @@ void MainWindow::displayLetter(QString id)    //显示一封信
 void MainWindow::removeLetter(QString id)    //删除一封信
 {
         //在allletter里找到标号id的信，删除
-    for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
+    for (vector<MIMEMail>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {
         string thisOne=(*i).displayID;
         //cout<<thisOne<<" for serach";
@@ -433,7 +433,7 @@ void MainWindow::removeLetter(QString id)    //删除一封信
 void MainWindow::on_toDelete_clicked()    //点击左侧垃圾桶按钮
 {
     ui->deleteList->clear();    //清空列表
-    for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
+    for (vector<MIMEMail>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {    //重新从allLetter中读取所有邮件并显示
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->deleteList);
         //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
@@ -456,7 +456,7 @@ void MainWindow::on_deleteList_itemDoubleClicked(QTreeWidgetItem *item, int colu
     removeLetter(id);
         //还要更新allLetter的内容
     ui->deleteList->clear();    //清空列表
-    for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
+    for (vector<MIMEMail>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {    //寻找标号id的邮件，删除！
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->deleteList);
         //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
@@ -524,8 +524,8 @@ void MainWindow::on_send_clicked()    //发送按钮
     unsigned const char * sEncode1 =  (const unsigned char*)tempSubject.c_str();
     tempSubject = base64_encode(sEncode1,subSizes);
 
-    test.mailFrom = ui->WriteSender->text().toLocal8Bit().toStdString();
-    test.mailTo = ui->WriteRecv->text().toLocal8Bit().toStdString();
+    test.from = ui->WriteSender->text().toLocal8Bit().toStdString();
+    test.to = ui->WriteRecv->text().toLocal8Bit().toStdString();
     //test.subject =  ui->WriteSubject->text().toLocal8Bit().toStdString();
 
     test.subject = "=?gb18030?B?"+tempSubject+"?=";
@@ -640,7 +640,7 @@ void MainWindow::on_nextPOP3_clicked()    //点击下一步
 void MainWindow::on_back_3_clicked()    //返回按钮
 {
     ui->mailList->clear();    //清空列表
-    for (vector<readLetterSimple>::iterator i=allLetter.begin();i!=allLetter.end();i++)
+    for (vector<MIMEMail>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {    //从allLetter中读取邮件
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
         qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());

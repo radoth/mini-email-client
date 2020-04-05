@@ -39,7 +39,7 @@ background-color: rgb(255, 255, 255);
 </string>
    </property>
    <property name="currentIndex">
-    <number>5</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="welcome">
     <property name="styleSheet">
