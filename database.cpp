@@ -1,5 +1,5 @@
 #include "database.h"
-#include"readLetter.h"
+#include"mimemail.h"
 #include <QDataStream>
 
 //建立一个数据库连接
