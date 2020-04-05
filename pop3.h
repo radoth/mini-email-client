@@ -4,6 +4,8 @@
 #include"sock.h"
 #include<regex>
 #include"readLetter.h"
+#include"base64.h"
+#include"QtDebug"
 using namespace std;
 
 class User      //使用pop3模块收信，要提供一个User类作为登录信息

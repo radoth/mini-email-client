@@ -92,7 +92,7 @@ string AppOctetStream::GetContentTypeString()
     return s;
 }
 
-// Caller is responsible for opening and closing the file
+
 void AppOctetStream::attach_file(QFile* pFileAtt,
                                   int nEncoding,
                                   string & sDestination,string filePath)
@@ -100,8 +100,6 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
 
     if( pFileAtt == NULL )
         return;
-
-
 
 
     QByteArray content;
@@ -112,12 +110,14 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
         //qDebug()<<"\n"<<temp<<"\n\n\n\n";
         QString sTemp = temp.toBase64();
         sDestination +=sTemp.toStdString();
+        //content += temp;
     }
-
+    //sDestination +="张原驰是大佬";
     qDebug()<<"\n\nbodysize:\n"<<sDestination.size()<<"\n";
 
 
     //QString b64Content = content.toBase64();
+    //b64Content = b64Content+b64Content+b64Content+b64Content;
     //sDestination +=b64Content.toStdString();
     sDestination +=  "\r\n" ;
 

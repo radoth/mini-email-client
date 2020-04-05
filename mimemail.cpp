@@ -38,8 +38,8 @@ void Mail::prepare_header()
 
     /*unsigned int sizes = subject.length();
     unsigned const char * sEncode =  (const unsigned char*)subject.c_str();
-    subject = base64_encode(sEncode,sizes);*/
-
+    subject = base64_encode(sEncode,sizes);
+    */
 
     string subj("");
     if (!subject.empty())

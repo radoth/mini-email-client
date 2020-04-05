@@ -26,6 +26,7 @@ private:
     void analysis();      //分析字符串
     bool match(string source, const char *reg, string &destination);      //匹配
 
+
 };
 
 void SplitString(const std::string& s, std::vector<std::string>& v, const std::string& c);      //字符串分割

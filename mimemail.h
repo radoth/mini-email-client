@@ -28,7 +28,6 @@ public:
     string cc;	//抄送
     string bcc;	//秘密抄送
 
-    list<string>fileList;       //储存附件文件名
 
     void FormatTheMessage();
 
@@ -70,6 +69,10 @@ public:
                       string szParameters = "" ,
                       int nEncoding = BASE64,
                       bool bPath = true );
+
+    //储存附件文件名
+    list<string>fileList;
+
 protected:
     void register_mime_type( MIMEContent* pMIMEType );
 
@@ -100,25 +103,14 @@ private:
         string m_sContent;  //内容
     };
 
+
+
+
     //储存所有MIME段的List
     list <MIMEPart> m_MIMEPartList;
 
     //储存所有MIME类型
     list <MIMEContent*> m_MIMETypeList;
-
-    class MIMETypeManager
-    {
-    public:
-        //CMIMEContentAgent* GetHandler( int nContentType );
-        //void RegisterMIMEType( MIMEContentAgent* pMIMEType);
-        virtual  ~MIMETypeManager();
-        MIMETypeManager();
-    private:
-        //CCriticalSection m_csAccess;
-        //CList < CMIMEContentAgent*, CMIMEContentAgent* > m_MIMETypeList;
-    };
-
-    //static CMIMETypeManager m_MIMETypeManager;
 };
 
 #endif // MIMEMAIL_H

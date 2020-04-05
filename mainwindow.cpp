@@ -287,7 +287,7 @@ void MainWindow::on_UpdateDone()    //在更新邮件操作完成后
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
         //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
-        ui->mailList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
+        ui->mailList->setItemWidget(item3,0,createItem(headerDecode((*i).subject),QString::fromLocal8Bit((*i).date.c_str())+"     "+headerDecode((*i).from),QString::fromStdString((*i).displayID)));
     }
     QMessageBox::information(NULL, "提示.", "刷新成功     .");
 
@@ -328,7 +328,7 @@ void MainWindow::UpdateLetter()    //更新所有邮件
 
 
     //下面一段是废弃代码
-    User muy;
+    /*User muy;
     muy.username=userName;
     muy.password=password;
     muy.hostID=pop3Server;
@@ -350,8 +350,8 @@ cout<<"error occured!";
     {
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
         //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
-        ui->mailList->setItemWidget(item3,0,createItem(QString::fromStdString((*i).subject),"QString::fromStdString((*i).content)",QString::fromStdString((*i).displayID)));
-    }
+        ui->mailList->setItemWidget(item3,0,createItem(headerDecode((*i).subject),QString::fromLocal8Bit((*i).date.c_str())+"     "+headerDecode((*i).from),QString::fromStdString((*i).displayID)));
+    }*/
 }
 
 /*--------------------------------------------------------------*/
@@ -395,10 +395,11 @@ void MainWindow::displayLetter(QString id)    //显示一封信
         //cout<<thisOne<<" for serach";
         if(thisOne==id.toStdString())
         {
-            ui->ReadTitle->setText(QString::fromLocal8Bit((*i).subject.c_str()));
-            ui->ReadSender->setText(QString::fromLocal8Bit((*i).from.c_str()));
+            ui->ReadTitle->setText(headerDecode((*i).subject));
+            ui->ReadSender->setText(headerDecode((*i).from));
+            ui->ReadRecv->setText(headerDecode((*i).to));
+
             ui->ReadTime->setText(QString::fromLocal8Bit((*i).date.c_str()));
-            ui->ReadRecv->setText(QString::fromLocal8Bit((*i).to.c_str()));
             ui->ReadContent->setText(QString::fromLocal8Bit((*i).content.c_str()));
             ui->stackedWidget->setCurrentIndex(6);
             currentLetter=id.toStdString();
@@ -437,7 +438,9 @@ void MainWindow::on_toDelete_clicked()    //点击左侧垃圾桶按钮
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->deleteList);
         //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
-        ui->deleteList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
+        //ui->deleteList->setItemWidget(item3,0,createItem(headerDecode((*i).subject),QString::fromLocal8Bit((*i).date.c_str())+"     "+headerDecode((*i).from),QString::fromStdString((*i).displayID)));
+        ui->deleteList->setItemWidget(item3,0,createItem(headerDecode((*i).subject),QString::fromLocal8Bit((*i).date.c_str())+"     "+headerDecode((*i).from),QString::fromStdString((*i).displayID)));
+
     }
     ui->stackedWidget->setCurrentIndex(8);
 }
@@ -458,7 +461,7 @@ void MainWindow::on_deleteList_itemDoubleClicked(QTreeWidgetItem *item, int colu
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->deleteList);
         //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
-        ui->deleteList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
+        ui->deleteList->setItemWidget(item3,0,createItem(headerDecode((*i).subject),QString::fromLocal8Bit((*i).date.c_str())+"     "+headerDecode((*i).from),QString::fromStdString((*i).displayID)));
     }
     ui->stackedWidget->setCurrentIndex(8);
 
@@ -483,6 +486,7 @@ void MainWindow::on_send_clicked()    //发送按钮
 {
     ui->send->setEnabled(false);
         //构造mail对象，然后调用smtp模块发送
+    string tempSubject,tempFrom,tempTo;
 
     test.hostID = smtpServer;
     //cout<<smtpPort<<endl;
@@ -491,9 +495,32 @@ void MainWindow::on_send_clicked()    //发送按钮
     test.localName = "MailClient";
     test.username = userName;
     test.password = password;
-    test.mailFrom = ui->WriteSender->text().toStdString();
-    test.mailTo = ui->WriteRecv->text().toStdString();
+
+    //将From，To，Subject编码
+    /*tempSubject = ui->WriteSender->text().toLocal8Bit().toStdString();
+    tempTo = ui->WriteRecv->text().toLocal8Bit().toStdString();
+    tempFrom = ui->WriteSubject->text().toLocal8Bit().toStdString();
+
+    unsigned int subSizes = tempSubject.length();
+    unsigned const char * sEncode1 =  (const unsigned char*)tempSubject.c_str();
+    tempSubject = base64_encode(sEncode1,subSizes);
+
+    unsigned int toSizes = tempTo.length();
+    unsigned const char * sEncode2 =  (const unsigned char*)tempTo.c_str();
+    tempTo = base64_encode(sEncode2,toSizes);
+
+    unsigned int fromSizes = tempFrom.length();
+    unsigned const char * sEncode3 =  (const unsigned char*)tempFrom.c_str();
+    tempFrom = base64_encode(sEncode3,fromSizes);
+
+    test.mailFrom = "\"=?gb18030?B?"+tempFrom+"?=\""+"<"+ui->WriteSender->text().toLocal8Bit().toStdString()+">";
+    test.mailTo = "\"=?gb18030?B?"+tempTo+"?=\""+"<"+ui->WriteRecv->text().toLocal8Bit().toStdString()+">";
+    test.subject = "=?gb18030?B?"+tempFrom+"?=";*/
+
+    test.mailFrom = ui->WriteSender->text().toLocal8Bit().toStdString();
+    test.mailTo = ui->WriteRecv->text().toLocal8Bit().toStdString();
     test.subject = ui->WriteSubject->text().toLocal8Bit().toStdString();
+
     test.body = ui->WriteContent->toPlainText().toLocal8Bit().toStdString();
     //cout<<test.body<<endl;
 
@@ -609,7 +636,7 @@ void MainWindow::on_back_3_clicked()    //返回按钮
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
         qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
-        ui->mailList->setItemWidget(item3,0,createItem(QString::fromLocal8Bit((*i).subject.c_str()),QString::fromLocal8Bit((*i).date.c_str())+"     "+QString::fromLocal8Bit((*i).from.c_str()),QString::fromStdString((*i).displayID)));
+        ui->mailList->setItemWidget(item3,0,createItem(headerDecode((*i).subject),QString::fromLocal8Bit((*i).date.c_str())+"     "+headerDecode((*i).from),QString::fromStdString((*i).displayID)));
     }
     ui->stackedWidget->setCurrentIndex(5);    //切换页面
 }
@@ -760,6 +787,37 @@ void MainWindow::delete_all_attachment()
 
 }
 
+//文件头解码
+QString MainWindow::headerDecode(string destination)
+{
+
+    QString qSub = QString::fromStdString(destination);
+    QString qType =  qSub.section("?",1,1);
+    QString qEncode = qSub.section("?",2,2);
+    QString qContent = qSub.section("?",3,-2);
+
+    //base64解码
+    string sTemp = qContent.toStdString();
+     const char * sEncode =  (const  char*)sTemp.c_str();
+    sTemp = base64_decode(sEncode);
+
+
+    if(qType=="UTF-8")
+    {
+        qContent = QString::fromUtf8(sTemp.c_str());
+    }
+    else if(qType == "gb18030")
+    {
+        qContent = QString::fromLocal8Bit(sTemp.c_str());
+    }
+    else
+    {
+        qContent = QString::fromLocal8Bit(destination.c_str());
+    }
+
+    return qContent;
+
+}
 
 
 

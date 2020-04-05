@@ -39,7 +39,7 @@ background-color: rgb(255, 255, 255);
 </string>
    </property>
    <property name="currentIndex">
-    <number>7</number>
+    <number>5</number>
    </property>
    <widget class="QWidget" name="welcome">
     <property name="styleSheet">
@@ -2599,9 +2599,9 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>100</y>
+       <y>90</y>
        <width>681</width>
-       <height>21</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">

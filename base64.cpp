@@ -108,3 +108,39 @@ std::string base64_decode(std::string const& encoded_string) {
 
     return strTemp;
 }
+
+ int isgbk(char *s, size_t ns)
+ {
+         if(ns > 2 && (uint8_t)*s >= 0x81 && (uint8_t)*s <= 0xfe
+                 && (
+                         ((uint8_t)*(s+1) >= 0x80 && (uint8_t)*(s+1) <= 0x7e)
+                         || ((uint8_t)*(s+1) >= 0xa1 && (uint8_t)*(s+1) <= 0xfe)
+                     )
+           )
+         {
+                 return 1;
+         }
+         return 0;
+ }
+
+ int isutf8(char *s, size_t ns)
+ {
+         uint8_t x = 0, i = 0, j = 0, nbytes = 0, n = 0;
+
+         for(i = 1; i < 7; i++)
+         {
+                 x = (uint8_t)(255 << i);
+                 if(((uint8_t)*s & x) == x)
+                 {
+                         n = nbytes = (8 - i);
+                         for(j = 0; (j < nbytes && j < ns); j++)
+                         {
+                                 if((uint8_t)s[j] <= 0x80 && (uint8_t)s[j] >= 0xc0)break;
+                                 else n--;
+                         }
+                         if(n == 0) return nbytes;
+                 }
+         }
+         return 0;
+ }
+

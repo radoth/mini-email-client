@@ -147,6 +147,8 @@ vector<readLetterSimple> RecvMail::getMailList()    //获取所有邮件
     string dat = listAll();    //得到邮件列表
 	regex reg2("^[+-].*?\r\n");
     string datAfter = regex_replace(dat, reg2, "");    //去掉列表首部
+
+
 	vector<string> datFinal;
     SplitString(datAfter, datFinal, "\r\n");    //字符串按行切割
 	vector<readLetterSimple> res;
