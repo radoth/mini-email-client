@@ -8,6 +8,7 @@
 #include<QString>
 #include<QRegExp>
 #include<QDebug>
+#include<iostream>
 
 using namespace std;
 
@@ -73,6 +74,7 @@ public:
     string m_sNoMIMEText;    //信件体MIME格式声明语句
     string m_sPartBoundary;//分割线内容
     string m_sMIMEContentType;//MIME段内容类型
+    string m_sMIMEEncode;      //MIME邮件编码方式
     list<string>fileList;    //储存附件文件名
 
     // MIME Type Codes
@@ -127,7 +129,8 @@ protected:
     /*------------------------MIME解析----------------------------*/
     //函数
     void unfold();      //分割字符串
-    void analysis();      //分析字符串
+    void headerAnalysis();      //分析header
+    void bodyAnalysis();      //分析body
     void splitHeaderBody(); //分割header和body并保存
     bool match(string source, const char *reg, string &destination);      //匹配
     void debug();

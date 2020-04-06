@@ -30,7 +30,7 @@ public:
     void UpdateLetter();      //更新，收取全部邮件
     void animation(QWidget *o);         //实现动画
     void delete_all_attachment();    //删除所有附件
-    QString headerDecode(string destination);    //信头解码
+    QString headerDecode(string destination,bool complete=false);    //信头解码
 
 
           //下面几个字符串是重要的变量，所有收发邮件都要用到这些字符串

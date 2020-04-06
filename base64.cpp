@@ -91,6 +91,137 @@ std::string base64_decode(std::string const& encoded_string) {
 }
 
 
+string Char2Hex(unsigned char cVal)
+{
+    string strTemp;
+    unsigned char cTempBuf1[10] = {0};
+    unsigned char cTempBuf2[10] = {0};
+    sprintf_s((char*)cTempBuf1, 10 * sizeof(unsigned char), "%02X", cVal);
+
+    cTempBuf2[0] = toupper(cTempBuf1[0]);
+    cTempBuf2[1] = toupper(cTempBuf1[1]);
+    cTempBuf2[2] = '/0';
+    strTemp = (char*)cTempBuf2;
+
+    return strTemp;
+}
+
+
+
+// QP编码
+
+bool QPEnCoding(string& aStr, bool &IsChanged)
+{
+    IsChanged = false;
+    int length = (int)aStr.size();//.length();
+    if (length <= 0)
+    {
+        return false;
+    }
+
+    unsigned char *c_copy = new unsigned char[length +1];
+    strcpy_s((char*)c_copy, (length +1) * sizeof(unsigned char), aStr.c_str());
+    aStr.clear();
+
+    int nLineLen = 0;
+    for (int i = 0; i < length; i++)
+    {
+        // c_copy[i] 介于 33 到 126 之间, 且c_copy[i]的值不为'='的时候, 直接输出
+        if ((c_copy[i] >= '!') && (c_copy[i] <= '~') && (c_copy[i] != '='))
+        {
+            aStr += (char)c_copy[i];
+            nLineLen ++;
+        }
+        // 其它的需编码为'='加两个字节的HEX码(大写)
+        else
+        {
+            aStr  += "=";
+            aStr  += Char2Hex(c_copy[i]);
+            nLineLen += 3;
+            IsChanged = true;
+        }
+
+        // 保证输出行不超过规定长度, 可在行尾加"=/r/n"序列作为软回车
+        if (nLineLen >= 73)
+        {
+            aStr += "=/r/n";
+            nLineLen = 0;
+        }
+    }
+
+    // 释放内存
+    delete[] c_copy;
+    c_copy = NULL;
+
+    return true;
+}
+
+// QP解码
+
+bool QPDeCoding(string& aStr, bool &IsChanged)
+{
+    // 输出的字符计数
+    IsChanged  = false;
+    int nSrcLen = (int)aStr.size();
+    if (nSrcLen <= 0)
+    {
+        return false;
+    }
+
+    unsigned char* pcTemp1 = 0;
+    unsigned char* pDst = new unsigned char[nSrcLen +1];
+    memset(pDst, 0, nSrcLen +1);
+    pcTemp1 = pDst;
+
+    char* pcTemp2 = 0;
+    char* pSrc = new char[nSrcLen +1];
+    strcpy_s((char*)pSrc, (nSrcLen + 1) * sizeof(char), aStr.c_str());
+    aStr.clear();
+    pcTemp2 = pSrc;
+
+    int i = 0;
+    while (i < nSrcLen)
+    {
+        // 软回车，跳过
+        if (strncmp(pSrc, "=/r/n", 3) == 0)
+        {
+            pSrc += 3;
+            i += 3;
+        }
+        else
+        {
+            // 是编码字节
+            if (*pSrc == '=')
+            {
+                sscanf_s(pSrc, "=%02X", pDst++);
+                pSrc += 3;
+                i += 3;
+                IsChanged = true;
+            }
+            // 非编码字节
+            else
+            {
+                *pDst++ = (unsigned char)*pSrc++;
+                i ++;
+            }
+        }
+    }
+
+    // 输出加个结束符
+    char end = '\0';
+    pDst = (unsigned char *)end;
+    aStr = (char*)pcTemp1;
+
+    delete[] pcTemp1;
+    pcTemp1 = 0;
+
+    delete[] pcTemp2;
+    pcTemp2 = 0;
+
+    return true;
+}
+
+
  std::string UTF8ToGBK(const char* strUTF8)
 {
     int len = MultiByteToWideChar(CP_UTF8, 0, strUTF8, -1, NULL, 0);

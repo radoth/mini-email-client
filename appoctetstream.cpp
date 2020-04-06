@@ -57,11 +57,19 @@ string AppOctetStream::build_sub_header(string szContent,
     //截取文件名
     QString QPath = QString::fromStdString(szContent);
     QString QfileName = QPath.section("/",-1);
-    string fileName = QfileName.toStdString();
+    string fileName = QfileName.toLocal8Bit().toStdString();
+
+    //对文件名编码
+    unsigned int subSizes = fileName.length();
+    unsigned const char * sEncode1 =  (const unsigned char*)fileName.c_str();
+    fileName = base64_encode(sEncode1,subSizes);
+
+    fileName = "=?gb18030?B?"+fileName+"?=";
+
 
     if( bPath )
     {
-        sTemp = "; file="+ fileName;
+        sTemp = "; file=\""+ fileName+"\"";
     }
     else
     {
@@ -74,7 +82,7 @@ string AppOctetStream::build_sub_header(string szContent,
 
     sSubHeader += "Content-Transfer-Encoding: base64\r\n" ;
 
-    sTemp = "Content-Disposition: attachment; filename="+fileName+"\r\n";
+    sTemp = "Content-Disposition: attachment; filename=\""+fileName+"\"\r\n";
     sSubHeader+=sTemp;
     sSubHeader +="\r\n";
      const char * sEncode =  (const  char*)sSubHeader.c_str();

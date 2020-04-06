@@ -395,9 +395,14 @@ void MainWindow::displayLetter(QString id)    //显示一封信
         //cout<<thisOne<<" for serach";
         if(thisOne==id.toStdString())
         {
-            ui->ReadTitle->setText(headerDecode((*i).subject));
-            ui->ReadSender->setText(headerDecode((*i).from));
-            ui->ReadRecv->setText(headerDecode((*i).to));
+            /*qDebug()<<"\nsubject:"<<QString::fromStdString((*i).subject.c_str());
+            qDebug()<<"\nfrom:"<<QString::fromStdString((*i).from.c_str());
+            qDebug()<<"\nto:"<<QString::fromStdString((*i).to.c_str());
+            */
+
+            ui->ReadTitle->setText(headerDecode((*i).subject,true));
+            ui->ReadSender->setText(headerDecode((*i).from,true));
+            ui->ReadRecv->setText(headerDecode((*i).to,true));
 
             ui->ReadTime->setText(QString::fromLocal8Bit((*i).date.c_str()));
             ui->ReadContent->setText(QString::fromLocal8Bit((*i).body.c_str()));
@@ -643,7 +648,7 @@ void MainWindow::on_back_3_clicked()    //返回按钮
     for (vector<MIMEMail>::iterator i=allLetter.begin();i!=allLetter.end();i++)
     {    //从allLetter中读取邮件
         QTreeWidgetItem *item3=new QTreeWidgetItem(ui->mailList);
-        qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
+        //qDebug()<<QString::fromLocal8Bit((*i).subject.c_str());
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
         ui->mailList->setItemWidget(item3,0,createItem(headerDecode((*i).subject),QString::fromLocal8Bit((*i).date.c_str())+"     "+headerDecode((*i).from),QString::fromStdString((*i).displayID)));
     }
@@ -772,12 +777,12 @@ void MainWindow::on_addAttachment_clicked()
         attachment->show();
         fileButtonList.append(attachment);
 
-        qDebug()<<"filename : "<<fileName;
+        //qDebug()<<"filename : "<<fileName;
 
 
 
     }
-    qDebug()<<"filePath : "<<filePath;
+    //qDebug()<<"filePath : "<<filePath;
 }
 
 
@@ -797,32 +802,57 @@ void MainWindow::delete_all_attachment()
 }
 
 //文件头解码
-QString MainWindow::headerDecode(string destination)
+QString MainWindow::headerDecode(string destination,bool complete)
 {
 
     QString qSub = QString::fromStdString(destination);
+    //qDebug()<<"\n\nqSub:"<<qSub;
     QString qType =  qSub.section("?",1,1);
     QString qEncode = qSub.section("?",2,2);
     QString qContent = qSub.section("?",3,-2);
+    QString qNumb = qSub.section("<",1,1);
+    bool isChanged = false;
 
-    //base64解码
+    //qDebug()<<"\n\nqNumb:"<<qNumb;
+
     string sTemp = qContent.toStdString();
-     const char * sEncode =  (const  char*)sTemp.c_str();
-    sTemp = base64_decode(sEncode);
+    if(qEncode == "B")
+    {
+        //base64解码
+        const char * sEncode =  (const  char*)sTemp.c_str();
+        sTemp = base64_decode(sEncode);
+    }
+    else if(qEncode == "Q")
+    {
+        QPDeCoding(sTemp,isChanged);
+    }
+
+    //cout<<"\nundecode:"<<sTemp;
 
 
     if(qType=="UTF-8")
     {
         qContent = QString::fromUtf8(sTemp.c_str());
+        if(qNumb!=""&&complete)
+        {
+            qContent =qContent+"<"+qNumb;
+        }
+
     }
     else if(qType == "gb18030")
     {
         qContent = QString::fromLocal8Bit(sTemp.c_str());
+        if(qNumb!=""&&complete)
+        {
+            qContent =qContent+"<"+qNumb;
+        }
+
     }
     else
     {
         qContent = QString::fromLocal8Bit(destination.c_str());
     }
+
 
     return qContent;
 
