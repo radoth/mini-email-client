@@ -22,7 +22,7 @@ public:
                              string& sDestination ) = 0;
     virtual string GetContentTypeString() = 0;
 
-    virtual void DecodePart(string szContent,string &sDestination)=0;
+    //virtual void DecodePart(string szContent,string &sDestination)=0;
 
 protected:
     virtual string build_sub_header( string szContent,

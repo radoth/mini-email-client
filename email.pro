@@ -21,6 +21,7 @@ LIBS += -lWs2_32
 
 SOURCES += \
     appoctetstream.cpp \
+    attachmentbutton.cpp \
     base64.cpp \
     database.cpp \
     main.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
 
 HEADERS += \
     appoctetstream.h \
+    attachmentbutton.h \
     base64.h \
     database.h \
     mainwindow.h \

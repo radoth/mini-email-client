@@ -8,6 +8,7 @@
 #include<QFileDialog>
 #include<QVector>
 #include"base64.h"
+#include"attachmentbutton.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -31,7 +32,7 @@ public:
     void animation(QWidget *o);         //实现动画
     void delete_all_attachment();    //删除所有附件
     QString headerDecode(string destination,bool complete=false);    //信头解码
-
+    void delete_all_load_attachment();  //删除所有下载附件
 
           //下面几个字符串是重要的变量，所有收发邮件都要用到这些字符串
 string smtpServer;      //smtp服务器
@@ -47,11 +48,19 @@ DataBase account;           //存储用户信息的数据库
 QVector<Remember> accountResult;        //所有用户信息
 
 QVector<QPushButton*>fileButtonList;
+QVector<QPushButton*>attachmentButtonList;
+struct File{
+    string fileName;
+    QByteArray fileData;
+};
+
+list<File> attachmentList;
 
 
 void displayLetter(QString id);      //在邮件列表里显示一封信
 void removeLetter(QString id);      //在邮件列表里删除一封信
 void loadAccount();
+void addLoadAttachment();
 private:
     MIMEMail test;
 private slots:
@@ -108,6 +117,9 @@ private slots:
     void on_newAccount_clicked();
 
     void on_addAttachment_clicked();
+
+    void load_attachment(QString fileName,QString filePath);
+
 
 private:
     Ui::MainWindow *ui;

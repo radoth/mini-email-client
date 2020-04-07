@@ -408,6 +408,23 @@ void MainWindow::displayLetter(QString id)    //显示一封信
             ui->ReadContent->setText(QString::fromStdString((*i).m_sMIMETextPlain));
             ui->stackedWidget->setCurrentIndex(6);
             currentLetter=id.toStdString();
+
+            delete_all_load_attachment();
+            if((*i).attachmentList.size())
+            {
+                qDebug()<<"\nattachmentNumber:"<<(*i).attachmentList.size();
+                //attachmentList = (*i).attachmentList;
+                for(auto ptr = (*i).attachmentList.begin();ptr != (*i).attachmentList.end();ptr++)
+                {
+                    File file;
+                    file.fileData = (*ptr).fileData;
+                    file.fileName = (*ptr).fileName;
+                    attachmentList.push_back(file);
+                    //qDebug()<<"fileName:\n"<<QString::fromStdString(file.fileName)<<endl;
+                    //qDebug()<<"fileData:\n"<<QString::fromStdString(file.fileData)<<endl;
+                }
+                addLoadAttachment();
+            }
             break;
         }
 
@@ -766,12 +783,35 @@ void MainWindow::on_addAttachment_clicked()
         }
 
         //设置附件图标按钮样式
-        QPushButton *attachment = new QPushButton(fileName+"\n"+fileSize, ui->attachFrame);
+        QPushButton *attachment = new AttachmentButton(ui->attachFrame);
+        attachment->setText(fileName+"\n"+fileSize);
         attachment->setIcon(QIcon(":/new/prefix1/image/file.png"));
         attachment->resize(150,40);
 
         attachment->setIconSize(QSize(30,40));
+        QString qss0="QPushButton {\
+        background-color: rgb(255, 255, 255);\
+        border-style: outset;\
+        border-width: 2px;\
+        border-radius: 5px;\
+        border-color: rgb(255, 255, 255);\
+        font: 8pt '微软雅黑';\
+        min-width:2em;\
+        color:black;\
+        }\
+        QPushButton:hover{\
+        background-color: rgb(200, 200, 200);\
+        }\
+        QPushButton:pressed {\
+        background-color: #1E90FF;\
+        border-style: inset;\
+        }\
+        QPushButton:!enabled{\
+        background-color: rgb(100, 100, 100);\
+        border-style: inset;\
+        }";
         attachment->setStyleSheet("QPushButton {border:none; font: 8pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
+        attachment->setStyleSheet(qss0);
         attachment->move((test.fileList.size()-1)%4*160,(test.fileList.size()-1)/4*50);
 
         attachment->show();
@@ -809,7 +849,8 @@ QString MainWindow::headerDecode(string destination,bool complete)
     //qDebug()<<"\n\nqSub:"<<qSub;
     QString qType =  qSub.section("?",1,1);
     QString qEncode = qSub.section("?",2,2);
-    QString qContent = qSub.section("?",3,-2);
+    QString qTemp = qSub.section("?",3);
+    QString qContent = qTemp.section("?",0,-2);
     QString qNumb = qSub.section("<",1,1);
     bool isChanged = false;
 
@@ -859,4 +900,123 @@ QString MainWindow::headerDecode(string destination,bool complete)
 }
 
 
+
+//添加附件
+void MainWindow::addLoadAttachment()
+{
+    int i = 0;
+    if(attachmentList.size()>=4)
+    {
+
+        //ui->attachFrame_2->setFixedSize(QSize(739,((attachmentList.size()-1)/4+1)*50));
+        ui->attachFrame_2->setFixedSize(QSize(739,((attachmentList.size()-1)/4+1)*50));
+
+    }
+
+    foreach(File file,attachmentList)
+    {
+
+
+        QString fileName = QString::fromStdString(file.fileName);
+
+        QString buttonTitle= fileName;
+        if(fileName.length()>(fileName.mid(0,4).length()+fileName.section(".",-1).length()+1))
+        {
+            buttonTitle = fileName.mid(0,4)+"…"+fileName.section(".",-1);
+        }
+
+        //设置附件图标按钮样式
+        AttachmentButton *attachment = new AttachmentButton(ui->attachFrame_2);
+        connect(attachment, SIGNAL(getFile(QString,QString)), this, SLOT(load_attachment(QString, QString)));
+        attachment->setText(buttonTitle);
+        attachment->setFileName(fileName);
+        attachment->setIcon(QIcon(":/new/prefix1/image/file.png"));
+        attachment->resize(150,40);
+
+        attachment->setIconSize(QSize(30,40));
+        QString qss0="QPushButton {\
+        background-color: rgb(255, 255, 255);\
+        border-style: outset;\
+        border-width: 2px;\
+        border-radius: 5px;\
+        border-color: rgb(255, 255, 255);\
+        font: 8pt '微软雅黑';\
+        min-width:2em;\
+        color:black;\
+        }\
+        QPushButton:hover{\
+        background-color: rgb(200, 200, 200);\
+        }\
+        QPushButton:pressed {\
+        background-color: #1E90FF;\
+        border-style: inset;\
+        }\
+        QPushButton:!enabled{\
+        background-color: rgb(100, 100, 100);\
+        border-style: inset;\
+        }";
+        //attachment->setStyleSheet("QPushButton {border:none; font: 8pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
+        attachment->setStyleSheet(qss0);
+        attachment->move((i)%4*160,(i)/4*50);
+
+        attachment->show();
+        attachmentButtonList.append(attachment);
+
+        i++;
+        //qDebug()<<"filename : "<<fileName;
+
+    }
+
+}
+
+
+//下载附件
+void MainWindow::load_attachment(QString fileName,QString filePath)
+{
+    qDebug()<<"\nname:"<<fileName<<"\n\npath:"<<filePath;
+    QFile file(filePath);
+    QIODevice::OpenMode flags = QIODevice::WriteOnly;
+    if(!file.open(flags))
+    {
+        qDebug()<<"6:"<<"save "<<fileName<<" failed";
+        return;
+    }
+    foreach(File f,attachmentList)
+    {
+        QString name = QString::fromStdString(f.fileName);
+        if(name == fileName)
+        {
+
+            /*QString dirPath= filePath;//attachments/1-subject/attachmentFile
+            QDir dir;
+            QString currentDir = dir.currentPath();//保存当前工作路径
+            if(!dir.exists(dirPath))
+                dir.mkpath(dirPath);
+            dir.setCurrent(dirPath);//更改执行路径*/
+            //qDebug()<<"data:\n"<<QString::fromStdString(f.fileData)<<endl;
+            qDebug()<<"write:"<<file.write(f.fileData);
+            file.close();
+            //dir.setCurrent(currentDir);//恢复工作路径
+            break;
+        }
+    }
+
+}
+
+
+
+//清空下载栏附件
+void MainWindow::delete_all_load_attachment()
+{
+    //if(attachmentList.size()>0)
+    //{
+        attachmentList.clear();
+        QList<AttachmentButton*> btns= ui->attachFrame_2->findChildren<AttachmentButton*>();
+        foreach (AttachmentButton* btn, btns)
+        {   delete btn;  }
+        ui->attachFrame_2->setFixedSize(QSize(739,59));
+
+    //}
+
+}
 

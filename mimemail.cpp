@@ -402,6 +402,17 @@ void MIMEMail::decodeMIMEMulMixed(QString qContent,QString qBoundary,QString qCo
             TextPlain text(TEXT_PLAIN);
             text.DecodePart(part.toStdString(),m_sMIMETextPlain);
         }
+        else if(qType == "application/octet-stream")
+        {
+            File file;
+            file.fileData = "";
+            AppOctetStream app(APPLICATION_OCTETSTREAM);
+            app.DecodePart(part.toStdString(),file.fileData);
+            file.fileName = app.GetFileName();
+            //qDebug()<<"\n\nInFileName"<<QString::fromStdString(file.fileName)<<endl;
+            //qDebug()<<"InFileData"<<QString::fromStdString(file.fileData)<<endl;
+            attachmentList.push_back(file);
+        }
 
         //qDebug()<<"\nqContentType:\n"<<qType<<endl;
 

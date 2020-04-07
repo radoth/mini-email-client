@@ -27,7 +27,8 @@ public:
                              int nEncoding,
                              bool bPath,
                              string& sDestination );
-    virtual void DecodePart(string szContent,string &sDestination);
+    void DecodePart(string szContent,QByteArray &sDestination);
+    string  GetFileName();
 
 
 protected:
@@ -37,6 +38,16 @@ protected:
                                       int nEncoding,
                                       bool bPath );
     virtual void split_header(string szContent);
+    void setHeader(QString qContent, QString qFileName, QString qContentEncode);
+    void file_name_decode(QString &qFileName);
+
+
+
+
+private:
+    string fileName; //文件名
+    string encode;  //编码方式
+    string content; //内容
 
 };
 

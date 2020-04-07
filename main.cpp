@@ -6,9 +6,9 @@
 
 int main(int argc, char *argv[])
 {
-    /*char* a ="tdrKrrfiL1FR08rP5M340rOw5i+0v87Esb4=" ;
+    /*char* a ="56ys5Y2B5LqM5bCBL+atpuWkp+mCrueusee9kemhteeJiC/luKbpmYTku7Y8YnI+Cjxicj4KPGJyPg==" ;
     string b = base64_decode(a);
-    QString c = QString::fromLocal8Bit(b.c_str());
+    QString c = QString::fromUtf8(b.c_str());
     qDebug()<<"decode:"<<c;*/
 
     /*bool isChanged = false;
@@ -22,4 +22,11 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     return a.exec();
+
+    /*QApplication a(argc, argv);
+    QWidget w;
+    AttachmentButton b(&w);
+    b.setText("Button");
+    w.show();
+    return a.exec();*/
 }

@@ -13,7 +13,7 @@ public:
 
     virtual bool AppendPart( string szContent, string szParameters, int nEncoding, bool bPath, string& sDestination );
     virtual string GetContentTypeString();
-    virtual void DecodePart(string szContent,string &sDestination);
+    void DecodePart(string szContent,string &sDestination);
     void setHeader(QString qContent, QString qCharset, QString qContentEncode);
 
 
