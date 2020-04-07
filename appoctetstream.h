@@ -7,8 +7,7 @@
 #include<QFile>
 #include<QDataStream>
 #include"base64.h"
-
-
+#include<regex>
 #define MAXBUF 58
 
 using namespace std;
@@ -44,10 +43,11 @@ protected:
 
 
 
+
 private:
     string fileName; //文件名
     string encode;  //编码方式
-    QString content; //内容
+    string content; //内容
 
 };
 

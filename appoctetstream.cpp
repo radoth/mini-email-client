@@ -148,16 +148,25 @@ void AppOctetStream:: DecodePart(QString szContent,QByteArray &sDestination)
     //qDebug()<<"unDecodefileData:\n"<<QString::fromStdString(content)<<endl;
 
 
+    //regex reg("\r\n\t");    //去除行折叠
+    //content = regex_replace(content, reg, "");
+    //qDebug()<<"\nrmSpace:\n"<<QString::fromStdString(content);
+
     QByteArray temp;
-    QByteArray byteArry(content.toLatin1());
+    QByteArray byteArry(content.c_str());
 
-    temp = byteArry.fromBase64(byteArry);
+    //qDebug()<<"\nDecodePartbyteArry:\n"<<byteArry;
 
-    sDestination = temp;
+    //temp = byteArry.fromBase64(byteArry);
 
-    int a =6;
+    //qDebug()<<"\nbyteArry:\n"<<temp;
+
+
+    sDestination = byteArry;
+
+    //int a =6;
     //cout<<"\ncharContent:\n"<<content.c_str()<<endl;
-    cout<<"\ndecodeContent:\n"<<Decode_base64(content.toStdString().c_str(),content.toStdString().length(),a)<<endl;
+    //cout<<"\ndecodeContent:\n"<<Decode_base64(content.c_str(),content.length(),a)<<endl;
 
     //sDestination = base64_decode(content.c_str());
     //qDebug()<<"\nDecodefileData:\n"<<QString::fromStdString(sDestination);
@@ -219,6 +228,7 @@ void AppOctetStream:: split_header(QString szContent)
     //qDebug()<<"\n\nunTransfileData:\n"<<qContentAppOct<<endl;
     //qDebug()<<"encode:"<<qContentEncode;
 
+    qContentAppOct = qContentAppOct.remove("\r\n");
 
     setHeader(qContentAppOct, qFileName ,  qContentEncode);
 
@@ -229,7 +239,7 @@ void AppOctetStream:: split_header(QString szContent)
 void AppOctetStream:: setHeader(QString qContent, QString qFileName, QString qContentEncode)
 {
     fileName = qFileName.trimmed().toStdString();
-    content = qContent.trimmed();
+    content = qContent.trimmed().toStdString();
     encode = qContentEncode.trimmed().toStdString();
 }
 
@@ -282,6 +292,7 @@ string AppOctetStream::GetFileName()
 {
     return fileName;
 }
+
 
 
 

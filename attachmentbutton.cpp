@@ -67,7 +67,7 @@ AttachmentButton::AttachmentButton(QWidget *parent)
     //m_actionTwo = new QAction(this);
     //m_actionThree = new QAction(this);
 
-    m_actionOne->setText("另存为");
+    m_actionOne->setText("Save as");
     //m_actionTwo->setText("ActionTwo");
     //m_actionThree->setText("ActionThree");
 

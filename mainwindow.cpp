@@ -421,7 +421,7 @@ void MainWindow::displayLetter(QString id)    //显示一封信
                     file.fileName = (*ptr).fileName;
                     attachmentList.push_back(file);
                     //qDebug()<<"fileName:\n"<<QString::fromStdString(file.fileName)<<endl;
-                    //qDebug()<<"fileData:\n"<<QString::fromStdString(file.fileData)<<endl;
+                    //qDebug()<<"fileData:\n"<<file.fileData;
                 }
                 addLoadAttachment();
             }
@@ -993,8 +993,15 @@ void MainWindow::load_attachment(QString fileName,QString filePath)
             if(!dir.exists(dirPath))
                 dir.mkpath(dirPath);
             dir.setCurrent(dirPath);//更改执行路径*/
-            //qDebug()<<"data:\n"<<QString::fromStdString(f.fileData)<<endl;
-            qDebug()<<"write:"<<file.write(f.fileData);
+            //qDebug()<<"data:\n"<<f.fileData<<endl;
+            QByteArray temp(f.fileData);
+            QByteArray decodeArry = temp.fromBase64(f.fileData);
+            f.fileData = f.fileData.fromBase64(f.fileData);
+
+            //qDebug()<<"\nload_attach_decodeArray:\n"<<decodeArry<<endl;
+            //qDebug()<<"\nload_attach_f.fileData:\n"<<f.fileData<<endl;
+
+            qDebug()<<"write:"<<file.write(decodeArry);
             file.close();
             //dir.setCurrent(currentDir);//恢复工作路径
             break;
