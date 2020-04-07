@@ -109,7 +109,7 @@ void MIMEMail::prepare_header()
 
     Mail::prepare_header();
     string mimeVersion = "MIME-Version: 1.0\r\n";
-    string content = "Content-Type: "+m_sMIMEContentType+";"+"boundary="+m_sPartBoundary;
+    string content = "Content-Type: "+m_sMIMEContentType+";\r\n"+"\tboundary="+"\""+m_sPartBoundary+"\"";
     header = header + mimeVersion + content;
 }
 
@@ -118,7 +118,7 @@ void MIMEMail::prepare_body()
 {
      if(body != "")
      {
-         AddMIMEPart(body,TEXT_PLAIN,"",BASE64,false);
+         AddMIMEPart(body,TEXT_PLAIN,"charset=\"gb18030\"",BASE64,false);
      }
      body = m_sNoMIMEText;
      body +=  "\r\n\r\n" ;
@@ -245,11 +245,209 @@ void MIMEMail::append_mime_parts()
  void MIMEMail::DecodeTheMessage()
  {
      this->letter = letter;
-     splitHeaderBody();
      unfold();    //去折叠
-     SplitString(letterAfter, letterFinal, "\r\n");    //按行分割字符串
-     analysis();    //分析信头
+     splitHeaderBody(); //分割文件头和文件尾
+     headerAnalysis();    //分析信头
+     bodyAnalysis();      //分析信体
  }
+
+
+//分析header
+void MIMEMail::headerAnalysis()
+{    //分析信头，把含有信头的行查找出来，并保存
+    QString qheder = QString::fromStdString(header);
+    QStringList list = qheder.split("\r\n");
+    foreach (QString headerPart, list) {
+        if (match(headerPart.toStdString(), "Subject:(.*)", subject))
+            continue;
+        else if (match(headerPart.toStdString(), "Received:(.*)", received))
+            continue;
+        else if (match(headerPart.toStdString(), "From:(.*)", from))
+            continue;
+        else if (match(headerPart.toStdString(), "T[Oo]:(.*)", to))
+            continue;
+        else if (match(headerPart.toStdString(), "Date:(.*)", date))
+            continue;
+        else if (match(headerPart.toStdString(), "Content-Type:(.*)", m_sMIMEContentType))
+            continue;
+        else if (match(headerPart.toStdString(), "Content-Transfer-Encoding:(.*)", m_sMIMEEncode))
+            continue;
+        else
+            continue;
+
+    }
+
+
+}
+
+
+//分析body
+void MIMEMail::bodyAnalysis()
+{
+    //分割Content-type部分
+    QString qContentType = QString::fromStdString(m_sMIMEContentType).simplified();
+    QString qContentEncode = QString::fromStdString(m_sMIMEEncode).simplified();
+
+    //获取类型
+    QString qType = qContentType.section(";",0,0);
+
+    //获取参数
+    QString qTypeParam = qContentType.section(";",1,1).section("=",1).simplified();
+    if(qTypeParam.section("\"",1,1)!="")
+    {
+        qTypeParam=qTypeParam.section("\"",1,1);
+    }
+
+    //qDebug()<<"TypeParam:"<<qTypeParam;
+
+
+    //获取内容
+    QString qContent = QString::fromStdString(body).section("\r\n.\r\n",0,0);
+
+    int type = judgeMIMEType(qType);
+
+    MIMEDecode(type,qTypeParam,qContentEncode,qContent);
+
+
+}
+
+
+void MIMEMail::MIMEDecode(int type,QString qTypeParam,QString qContentEncode,QString qContent)
+{
+    switch (type) {
+    case TEXT_PLAIN:
+    {
+        //解码
+        TextPlain text(TEXT_PLAIN);
+        text.setHeader(qContent,qTypeParam,qContentEncode);
+        text.DecodePart(qContent.toStdString(),m_sMIMETextPlain);
+
+        break;
+    }
+    case MULTIPART_ALTERNATIVE:
+    {
+        decodeMIMEMulAlternative(qContent,qTypeParam, qContentEncode);
+        break;
+    }
+    case MULTIPART_MIXED:
+    {
+        decodeMIMEMulMixed(qContent,qTypeParam, qContentEncode);
+        break;
+    }
+    default:
+        break;
+
+    }
+
+}
+
+
+
+//multipart/alternativele类型解码
+void MIMEMail::decodeMIMEMulAlternative(QString qContent, QString qBoundary, QString qContentEncode)
+{
+    //qDebug()<<"\nalter:\n"<<qContent;
+
+    TextPlain text(TEXT_PLAIN);
+    QString qTextPlain = splitMIMEPart(qContent,qBoundary).first();
+    QString qHtml = splitMIMEPart(qContent,qBoundary).last();
+
+    text.DecodePart(qTextPlain.toStdString(),m_sMIMETextPlain);
+
+    //qDebug()<<"textPlain:"<<qTextPlain;
+    //qDebug()<<"html:"<<qHtml;
+
+
+}
+
+
+//multipart/mixed类型解码
+void MIMEMail::decodeMIMEMulMixed(QString qContent,QString qBoundary,QString qContentEncode)
+{
+
+    QStringList qList = splitMIMEPart(qContent,qBoundary);
+    foreach(QString part,qList)
+    {
+
+        QString qContentType = part.section("\r\n",0,0);
+        QString qContentEncode = part.section("\r\n",1,1);
+
+        qContentType = qContentType.section("Content-Type:",1).trimmed();
+        qContentEncode = qContentEncode.section("Content-Transfer-Encoding:",1).trimmed();
+
+        //qDebug()<<"contentType:"<<qContentType;
+        //qDebug()<<"contentEncode:"<<qContentEncode;
+
+        //获取类型
+        QString qType = qContentType.section(";",0,0);
+        //qDebug()<<"\n\n\n\nqType:"<<qType;
+
+
+        //获取字符集
+        QString qTypeParam = qContentType.section(";",1,1).section("=",1).simplified();
+        if(qTypeParam.section("\"",1,1)!="")
+        {
+            qTypeParam=qTypeParam.section("\"",1,1);
+        }
+
+        //判断类型并解码
+        if(qType == "multipart/alternative")
+        {
+            //qDebug()<<"qTypeParam:"<<qTypeParam;
+            //qDebug()<<"contentEncode:"<<qContentEncode;
+            decodeMIMEMulAlternative(part,qTypeParam, qContentEncode);
+        }
+        else if(qType == "text/plain")
+        {
+            TextPlain text(TEXT_PLAIN);
+            text.DecodePart(part.toStdString(),m_sMIMETextPlain);
+        }
+
+        //qDebug()<<"\nqContentType:\n"<<qType<<endl;
+
+    }
+}
+
+
+
+//MIME段分割
+QStringList MIMEMail::splitMIMEPart(QString content,QString qBoundary)
+{
+    QStringList result;
+
+    QString tail = "--"+qBoundary+"--";
+    QString partBoundary = "--"+qBoundary;
+    QString rmHeaderTailContent = content.section(partBoundary,1).section(tail,0,0);
+
+    foreach(QString part,rmHeaderTailContent.split(partBoundary))
+    {
+        result.push_back(part.trimmed());
+    }
+
+
+    return result;
+}
+
+
+
+//分割body和header并保存
+void MIMEMail::splitHeaderBody()
+{
+    QString letter = QString::fromStdString(this->letter);
+    //qDebug()<<"letter:"<<letter<<"\n\n";
+
+
+    QString sep("\r\n\r\n");
+    QString header = letter.section(sep,0,0);
+    //qDebug()<<"\nheader:"<<header;
+    QString body = letter.section(sep,1);
+    //qDebug()<<"\nbody:"<<body;
+
+    this->header = header.toStdString();
+    this->body = body.toStdString();
+
+}
+
 
 
 void MIMEMail::unfold()    //字符串格式处理
@@ -264,68 +462,17 @@ void MIMEMail::unfold()    //字符串格式处理
             letterAfter.erase(pos-1);
         }
     }
+    //qDebug()<<"\nletter:"<<QString::fromStdString(letter)<<"\n";
     regex reg("\r\n\t");    //去除行折叠
-    letterAfter = regex_replace(letter, reg, "");
+    letter = regex_replace(letter, reg, "");
 
     regex reg2("^[+-].*?\r\n");    //去除服务器状态信息
-    letterAfter = regex_replace(letterAfter, reg2, "");
+    letter = regex_replace(letter, reg2, "");
 
-    //cout<<letterAfter<<endl;
+    //cout<<"\n\nletter:\n"<<letterAfter<<endl;
 }
 
 
-
-void MIMEMail::debug()
-{
-    cout << "==================" << endl;
-    cout << "subject "<<subject << endl;
-    cout << "received " << received << endl;
-    cout << "from " << from << endl;
-    cout << "to " << to << endl;
-    cout << "date " << date << endl;
-    cout << "content " << body << endl;
-    cout << "==================" << endl;
-}
-
-void MIMEMail(const std::string& s, std::vector<std::string>& v, const std::string& c)
-{    //分割字符串函数，过程可以忽略
-    std::string::size_type pos1, pos2;
-    pos2 = s.find(c);
-    pos1 = 0;
-    while (std::string::npos != pos2)
-    {
-        v.push_back(s.substr(pos1, pos2 - pos1));
-
-        pos1 = pos2 + c.size();
-        pos2 = s.find(c, pos1);
-    }
-    if (pos1 != s.length())
-        v.push_back(s.substr(pos1));
-}
-
-void MIMEMail::analysis()
-{    //分析信头，把含有信头的行查找出来，并保存
-    for (vector<string>::iterator i = letterFinal.begin(); i != letterFinal.end(); i++)
-    {
-        if (match(*i, "Subject:(.*)", subject))
-            continue;
-        else if (match(*i, "Received:(.*)", received))
-            continue;
-        else if (match(*i, "From:(.*)", from))
-            continue;
-        else if (match(*i, "T[Oo]:(.*)", to))
-            continue;
-        else if (match(*i, "Date:(.*)", date))
-            continue;
-        else if (match(*i, "X-.*:(.*)", junk))
-            continue;
-        else if (match(*i, "Message-Id:(.*)", junk))
-            continue;
-        else if (match(*i, ".", junk))
-            continue;
-        else body.append(*i + "\n");
-    }
-}
 
 bool MIMEMail::match(string source, const char * reg, string & destination)
 {    //正则表达式匹配
@@ -339,40 +486,44 @@ bool MIMEMail::match(string source, const char * reg, string & destination)
     else return false;
 }
 
-//分割body和header并保存
-void MIMEMail::splitHeaderBody()
+
+int MIMEMail::judgeMIMEType(QString contentType)
 {
-    QString letter = QString::fromStdString(this->letter);
-    //qDebug()<<"letter:"<<letter<<"\n\n";
-
-    QString sep("\r\n\r\n");
-    QString header = letter.section(sep,0,0);
-    //qDebug()<<"\nheader:"<<header;
-    QString body = letter.section(sep,1);
-    //qDebug()<<"\nbody:"<<body;
-
-    this->header = header.toStdString();
-    this->body = body.toStdString();
-
-}
-
-
-void SplitString(const std::string& s, std::vector<std::string>& v, const std::string& c)
-{    //分割字符串函数，过程可以忽略
-    std::string::size_type pos1, pos2;
-    pos2 = s.find(c);
-    pos1 = 0;
-    while (std::string::npos != pos2)
+    if(contentType == "text/plain")
     {
-        v.push_back(s.substr(pos1, pos2 - pos1));
-
-        pos1 = pos2 + c.size();
-        pos2 = s.find(c, pos1);
+        return TEXT_PLAIN;
     }
-    if (pos1 != s.length())
-        v.push_back(s.substr(pos1));
+    else if(contentType == "multipart/mixed")
+    {
+        return MULTIPART_MIXED;
+    }
+    else if(contentType == "multipart/alternative")
+    {
+        return MULTIPART_ALTERNATIVE;
+    }
+    else if(contentType == "multipart/related")
+    {
+        return MULTIPART_RELATED;
+    }
+    else
+    {
+        return NEXT_FREE_MIME_CODE;
+    }
+
+
 }
 
+void MIMEMail::debug()
+{
+    cout << "==================" << endl;
+    cout << "subject "<<subject << endl;
+    cout << "received " << received << endl;
+    cout << "from " << from << endl;
+    cout << "to " << to << endl;
+    cout << "date " << date << endl;
+    cout << "content " << body << endl;
+    cout << "==================" << endl;
+}
 
 
 /*---------------------------------------------------------------------------------------*/
