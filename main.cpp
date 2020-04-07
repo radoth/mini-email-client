@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-    /*char* a ="zt64vbz+" ;
+    /*char* a ="tdrKrrfiL1FR08rP5M340rOw5i+0v87Esb4=" ;
     string b = base64_decode(a);
     QString c = QString::fromLocal8Bit(b.c_str());
     qDebug()<<"decode:"<<c;*/

@@ -22,11 +22,14 @@ public:
                              string& sDestination ) = 0;
     virtual string GetContentTypeString() = 0;
 
+    virtual void DecodePart(string szContent,string &sDestination)=0;
+
 protected:
     virtual string build_sub_header( string szContent,
                                       string szParameters,
                                       int nEncoding,
                                       bool bPath ) = 0;
+    virtual void split_header(string szContent) = 0;
 
 
 private:

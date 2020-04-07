@@ -10,6 +10,8 @@ AppOctetStream::~AppOctetStream()
 {
 }
 
+/*----------------------------------编码部分--------------------------------------*/
+//向body中添加内容
 bool AppOctetStream::AppendPart(string szContent,
                                  string szParameters,
                                  int nEncoding,
@@ -44,6 +46,7 @@ bool AppOctetStream::AppendPart(string szContent,
 
     return true;
 }
+
 
 
 string AppOctetStream::build_sub_header(string szContent,
@@ -175,4 +178,19 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
     sDestination += _T( "\r\n" );
     delete pEncoder;*/
 }
+/*------------------------------------------------------------------------------*/
+
+
+/*----------------------------------解码部分--------------------------------------*/
+//解码
+void AppOctetStream:: DecodePart(string szContent,string &sDestination)
+{
+    qDebug()<<"nothing";
+}
+
+void AppOctetStream:: split_header(string szContent)
+{
+
+}
+
 

@@ -27,6 +27,8 @@ public:
                              int nEncoding,
                              bool bPath,
                              string& sDestination );
+    virtual void DecodePart(string szContent,string &sDestination);
+
 
 protected:
     virtual void attach_file( QFile* pFileAtt, int nEncoding, string& sDestination,string filePath );
@@ -34,6 +36,8 @@ protected:
                                       string szParameters,
                                       int nEncoding,
                                       bool bPath );
+    virtual void split_header(string szContent);
+
 };
 
 #endif // APPOCTETSTREAM_H

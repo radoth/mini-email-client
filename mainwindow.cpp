@@ -405,7 +405,7 @@ void MainWindow::displayLetter(QString id)    //显示一封信
             ui->ReadRecv->setText(headerDecode((*i).to,true));
 
             ui->ReadTime->setText(QString::fromLocal8Bit((*i).date.c_str()));
-            ui->ReadContent->setText(QString::fromLocal8Bit((*i).body.c_str()));
+            ui->ReadContent->setText(QString::fromStdString((*i).m_sMIMETextPlain));
             ui->stackedWidget->setCurrentIndex(6);
             currentLetter=id.toStdString();
             break;

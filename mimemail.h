@@ -72,9 +72,13 @@ public:
     void DecodeTheMessage();
 
     string m_sNoMIMEText;    //信件体MIME格式声明语句
-    string m_sPartBoundary;//分割线内容
+    string m_sPartBoundary;  //分割线内容
     string m_sMIMEContentType;//MIME段内容类型
-    string m_sMIMEEncode;      //MIME邮件编码方式
+    string m_sMIMEEncode;     //MIME邮件编码方式
+
+    string m_sMIMETextPlain;  //纯文本内容
+    string m_sMIMEHtml;       //富文本内容
+
     list<string>fileList;    //储存附件文件名
 
     // MIME Type Codes
@@ -82,6 +86,9 @@ public:
     {
         TEXT_PLAIN = 0,
         APPLICATION_OCTETSTREAM,
+        MULTIPART_MIXED,
+        MULTIPART_ALTERNATIVE,
+        MULTIPART_RELATED,
         NEXT_FREE_MIME_CODE
     };
     //编码方式
@@ -123,6 +130,7 @@ protected:
                       string szParameters = "" ,
                       int nEncoding = BASE64,
                       bool bPath = true );
+
     /*-----------------------------------------------------------*/
 
 
@@ -133,6 +141,15 @@ protected:
     void bodyAnalysis();      //分析body
     void splitHeaderBody(); //分割header和body并保存
     bool match(string source, const char *reg, string &destination);      //匹配
+    QStringList splitMIMEPart(QString content,QString qBoundary); //MIME段分割
+    int judgeMIMEType(QString contentType);   //判断类型
+    //void decodeMIMETextPlain(QString qContent,QString qCharset,QString qContentEncode);   //textplain类型解码
+    void decodeMIMEMulAlternative(QString qContent,QString qBoundary,QString qContentEncode); //multipart/alternativele类型解码
+    void decodeMIMEMulMixed(QString qContent,QString qBoundary,QString qContentEncode); //multipart/mixed类型解码
+
+    void MIMEDecode(int type,QString qTypeParam,QString qContentEncode,QString qContent);//解码
+
+
     void debug();
     /*-----------------------------------------------------------*/
 
@@ -154,6 +171,9 @@ private:
     //储存所有MIME段的List
     list <MIMEPart> m_MIMEPartList;
 
+    //解码时储存所有MIME段的List
+    list <MIMEPart> m_MIMEDecodePartList;
+
     //储存所有MIME类型
     list <MIMEContent*> m_MIMETypeList;
 
@@ -161,7 +181,6 @@ private:
 
 };
 
-void SplitString(const std::string& s, std::vector<std::string>& v, const std::string& c);      //字符串分割
 
 
 #endif // MIMEMAIL_H
