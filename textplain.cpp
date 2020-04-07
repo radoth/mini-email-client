@@ -89,7 +89,7 @@ void TextPlain:: DecodePart(string szContent,string &sDestination)
 {
     if(content=="")
     {
-        split_header(szContent);
+        split_header(QString::fromStdString(szContent));
     }
     //qDebug()<<"content:"<<qContent;
     QString qTextPlain;
@@ -115,10 +115,10 @@ void TextPlain:: DecodePart(string szContent,string &sDestination)
 
 
 //分割MIME段头部并赋值
-void TextPlain::split_header(string szContent)
+void TextPlain::split_header(QString szContent)
 {
 
-    QString qContent = QString::fromStdString(szContent);
+    QString qContent = szContent;
 
 
     QString qHeader =qContent.section("\r\n\r\n",0,0);

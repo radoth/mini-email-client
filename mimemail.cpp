@@ -407,7 +407,7 @@ void MIMEMail::decodeMIMEMulMixed(QString qContent,QString qBoundary,QString qCo
             File file;
             file.fileData = "";
             AppOctetStream app(APPLICATION_OCTETSTREAM);
-            app.DecodePart(part.toStdString(),file.fileData);
+            app.DecodePart(part,file.fileData);
             file.fileName = app.GetFileName();
             //qDebug()<<"\n\nInFileName"<<QString::fromStdString(file.fileName)<<endl;
             //qDebug()<<"InFileData"<<QString::fromStdString(file.fileData)<<endl;

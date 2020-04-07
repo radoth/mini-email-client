@@ -112,17 +112,20 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
     if( pFileAtt == NULL )
         return;
 
-
-    QByteArray content;
-
+    //注释掉的方法上传的文件无法打开
+    /*QByteArray content;
     while(!pFileAtt->atEnd())
     {
         QByteArray temp = pFileAtt->readLine();
 
         QString sTemp = temp.toBase64();
         sDestination +=sTemp.toStdString();
-    }
 
+    }*/
+
+    QByteArray content =  pFileAtt->readAll();
+    QString b64Content = content.toBase64();
+    sDestination +=b64Content.toStdString();
     //qDebug()<<"\n\nbodysize:\n"<<sDestination.size()<<"\n";
 
     sDestination +=  "\r\n" ;
@@ -133,7 +136,7 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
 
 /*----------------------------------解码部分--------------------------------------*/
 //解码
-void AppOctetStream:: DecodePart(string szContent,QByteArray &sDestination)
+void AppOctetStream:: DecodePart(QString szContent,QByteArray &sDestination)
 {
     split_header(szContent);
     //qDebug()<<"\n\nMulMIXED!!\n\n";
@@ -146,11 +149,15 @@ void AppOctetStream:: DecodePart(string szContent,QByteArray &sDestination)
 
 
     QByteArray temp;
-    QByteArray byteArry(content.c_str());
+    QByteArray byteArry(content.toLatin1());
 
     temp = byteArry.fromBase64(byteArry);
 
     sDestination = temp;
+
+    int a =6;
+    //cout<<"\ncharContent:\n"<<content.c_str()<<endl;
+    cout<<"\ndecodeContent:\n"<<Decode_base64(content.toStdString().c_str(),content.toStdString().length(),a)<<endl;
 
     //sDestination = base64_decode(content.c_str());
     //qDebug()<<"\nDecodefileData:\n"<<QString::fromStdString(sDestination);
@@ -159,10 +166,10 @@ void AppOctetStream:: DecodePart(string szContent,QByteArray &sDestination)
 
 
 //分割header
-void AppOctetStream:: split_header(string szContent)
+void AppOctetStream:: split_header(QString szContent)
 {
 
-    QString qContent = QString::fromStdString(szContent);
+    QString qContent = szContent;
 
     //将头部和主体分开
     QString qHeader =qContent.section("\r\n\r\n",0,0);
@@ -222,7 +229,7 @@ void AppOctetStream:: split_header(string szContent)
 void AppOctetStream:: setHeader(QString qContent, QString qFileName, QString qContentEncode)
 {
     fileName = qFileName.trimmed().toStdString();
-    content = qContent.trimmed().toStdString();
+    content = qContent.trimmed();
     encode = qContentEncode.trimmed().toStdString();
 }
 

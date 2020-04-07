@@ -13,3 +13,5 @@ int isutf8(char *s, size_t ns);
 string Char2Hex(unsigned char cVal);
 bool QPEnCoding(string& aStr, bool &IsChanged);
 bool QPDeCoding(string& aStr, bool &IsChanged);
+
+string Decode_base64(const char* Data,int DataByte,int& OutByte);

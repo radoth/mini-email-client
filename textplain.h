@@ -22,7 +22,7 @@ protected:
 
     string wrap_text( string szText );
     virtual string build_sub_header( string szContent, string szParameters, int nEncoding, bool bPath );
-    virtual void split_header(string szContent);
+    virtual void split_header(QString szContent);
 
 
 private:

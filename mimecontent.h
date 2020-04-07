@@ -29,7 +29,7 @@ protected:
                                       string szParameters,
                                       int nEncoding,
                                       bool bPath ) = 0;
-    virtual void split_header(string szContent) = 0;
+    virtual void split_header(QString szContent) = 0;
 
 
 private:
