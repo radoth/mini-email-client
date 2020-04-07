@@ -102,7 +102,12 @@ public:
         NEXT_FREE_ENCODING_CODE
     };
 
+    struct File{
+        string fileName;
+        QByteArray fileData;
+    };
 
+    list<File> attachmentList;
 
 
 protected:
@@ -171,8 +176,6 @@ private:
     //储存所有MIME段的List
     list <MIMEPart> m_MIMEPartList;
 
-    //解码时储存所有MIME段的List
-    list <MIMEPart> m_MIMEDecodePartList;
 
     //储存所有MIME类型
     list <MIMEContent*> m_MIMETypeList;

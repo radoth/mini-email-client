@@ -6,9 +6,9 @@
 
 int main(int argc, char *argv[])
 {
-    /*char* a ="tdrKrrfiL1FR08rP5M340rOw5i+0v87Esb4=" ;
+    /*char* a ="56ys5Y2B5LqM5bCBL+atpuWkp+mCrueusee9kemhteeJiC/luKbpmYTku7Y8YnI+Cjxicj4KPGJyPg==" ;
     string b = base64_decode(a);
-    QString c = QString::fromLocal8Bit(b.c_str());
+    QString c = QString::fromUtf8(b.c_str());
     qDebug()<<"decode:"<<c;*/
 
     /*bool isChanged = false;
@@ -22,4 +22,67 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     return a.exec();
+
+
+
+    /*QApplication a(argc, argv);
+    QWidget w;
+    AttachmentButton b(&w);
+    b.setText("Button");
+    w.show();
+    return a.exec();*/
+
+    /*
+    QString filePath = "C:/Users/10694/Desktop/test/24小时计数法 - 副本";
+    QFile file(filePath);
+    QIODevice::OpenMode flags = QIODevice::WriteOnly;
+
+    string c = "";
+
+    QByteArray ddd;
+
+    qDebug()<<"write:"<<file.write();
+    file.close();
+
+
+*/
+
+
+    /*
+    QFile file("C:/Users/10694/Desktop/24小时计数法 - 副本.docx");
+
+
+    if(!file.open(QIODevice::ReadOnly))
+    {
+    }
+
+    QByteArray content =  file.readAll();
+    QString b64Content = content.toBase64();
+
+    file.close();
+
+    QFile file2("C:/Users/10694/Desktop/test/24小时计数法 - 副本.docx");
+
+    QByteArray byteArry(b64Content.toStdString().c_str());
+
+    //qDebug()<<"\nbyteArry:\n"<<byteArry;
+
+    QByteArray temp = byteArry.fromBase64(byteArry);
+    byteArry = byteArry.fromBase64(byteArry);
+
+    //qDebug()<<"\nmainDecodeArray:\n"<<byteArry;
+    qDebug()<<"\nmaintempArray:\n"<<temp;
+
+    if(!file2.open(QIODevice::WriteOnly))
+    {
+    }
+
+    file2.write(temp);
+    file2.close();
+
+
+*/
+
+
+
 }

@@ -13,7 +13,7 @@ public:
 
     virtual bool AppendPart( string szContent, string szParameters, int nEncoding, bool bPath, string& sDestination );
     virtual string GetContentTypeString();
-    virtual void DecodePart(string szContent,string &sDestination);
+    void DecodePart(string szContent,string &sDestination);
     void setHeader(QString qContent, QString qCharset, QString qContentEncode);
 
 
@@ -22,7 +22,7 @@ protected:
 
     string wrap_text( string szText );
     virtual string build_sub_header( string szContent, string szParameters, int nEncoding, bool bPath );
-    virtual void split_header(string szContent);
+    virtual void split_header(QString szContent);
 
 
 private:
