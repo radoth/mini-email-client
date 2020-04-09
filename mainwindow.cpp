@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<QGraphicsDropShadowEffect>
 #include<QMouseEvent>
@@ -10,6 +10,7 @@
 #include <QCloseEvent>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
+#include"base64.h"
 
 
 void MainWindow::closeEvent(QCloseEvent *event) //关闭窗口事件
@@ -811,7 +812,7 @@ void MainWindow::on_addAttachment_clicked()
         border-style: inset;\
         }";
         attachment->setStyleSheet("QPushButton {border:none; font: 8pt '微软雅黑';}QPushButton:clicked{background-color: rgb(243, 243, 243);}");
-        attachment->setStyleSheet(qss0);
+        //attachment->setStyleSheet(qss0);
         attachment->move((test.fileList.size()-1)%4*160,(test.fileList.size()-1)/4*50);
 
         attachment->show();
@@ -973,7 +974,7 @@ void MainWindow::addLoadAttachment()
 //下载附件
 void MainWindow::load_attachment(QString fileName,QString filePath)
 {
-    qDebug()<<"\nname:"<<fileName<<"\n\npath:"<<filePath;
+    //qDebug()<<"\nname:"<<fileName<<"\n\npath:"<<filePath;
     QFile file(filePath);
     QIODevice::OpenMode flags = QIODevice::WriteOnly;
     if(!file.open(flags))
@@ -995,13 +996,14 @@ void MainWindow::load_attachment(QString fileName,QString filePath)
             dir.setCurrent(dirPath);//更改执行路径*/
             //qDebug()<<"data:\n"<<f.fileData<<endl;
             QByteArray temp(f.fileData);
-            QByteArray decodeArry = temp.fromBase64(f.fileData);
-            f.fileData = f.fileData.fromBase64(f.fileData);
+            //qDebug()<<"temp:\n"<<temp<<endl;
+            QByteArray decodeArray = temp.fromBase64(temp);
+            //f.fileData = f.fileData.fromBase64(f.fileData);
 
-            //qDebug()<<"\nload_attach_decodeArray:\n"<<decodeArry<<endl;
+            //qDebug()<<"\nload_attach_decodeArray:\n"<<decodeArray<<endl;
             //qDebug()<<"\nload_attach_f.fileData:\n"<<f.fileData<<endl;
 
-            qDebug()<<"write:"<<file.write(decodeArry);
+            qDebug()<<"write:"<<file.write(f.fileData);
             file.close();
             //dir.setCurrent(currentDir);//恢复工作路径
             break;

@@ -1,4 +1,4 @@
-#include "appoctetstream.h"
+﻿#include "appoctetstream.h"
 
 
 AppOctetStream::AppOctetStream( int nContentType )
@@ -125,8 +125,43 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
 
     QByteArray content =  pFileAtt->readAll();
     QString b64Content = content.toBase64();
+
+    //qDebug()<<"\nuploadingContent:\n"<<content;
+
+    qDebug()<<"\nuploadingDecodeContent:\n"<<b64Content;
+
+
     sDestination +=b64Content.toStdString();
     //qDebug()<<"\n\nbodysize:\n"<<sDestination.size()<<"\n";
+
+
+    /*--------------------------------------------*/
+
+    QFile file2("C:/Users/10694/Desktop/test/abcdef.docx");
+
+    QByteArray byteArry(b64Content.toStdString().c_str());
+
+    //qDebug()<<"\nbyteArry:\n"<<byteArry;
+
+    QByteArray temp = byteArry.fromBase64(byteArry);
+    byteArry = byteArry.fromBase64(byteArry);
+
+    //qDebug()<<"\nuploading-load:\n"<<temp;
+    //qDebug()<<"\nmaintempArray:\n"<<temp;
+
+    if(!file2.open(QIODevice::WriteOnly))
+    {
+    }
+
+    file2.write(temp);
+    file2.close();
+
+
+
+
+
+    /*---------------------------------------------*/
+
 
     sDestination +=  "\r\n" ;
 
@@ -152,7 +187,7 @@ void AppOctetStream:: DecodePart(QString szContent,QByteArray &sDestination)
     //content = regex_replace(content, reg, "");
     //qDebug()<<"\nrmSpace:\n"<<QString::fromStdString(content);
 
-    QByteArray temp;
+    //QByteArray temp;
     QByteArray byteArry(content.c_str());
 
     //qDebug()<<"\nDecodePartbyteArry:\n"<<byteArry;
@@ -162,7 +197,15 @@ void AppOctetStream:: DecodePart(QString szContent,QByteArray &sDestination)
     //qDebug()<<"\nbyteArry:\n"<<temp;
 
 
-    sDestination = byteArry;
+
+
+    qDebug()<<"\nloadDecodeContent:\n"<<byteArry;
+
+    QByteArray temp = byteArry.fromBase64(byteArry);
+
+
+
+    sDestination = temp;
 
     //int a =6;
     //cout<<"\ncharContent:\n"<<content.c_str()<<endl;

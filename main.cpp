@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 
 #include "database.h"
 #include <QApplication>
@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
 */
 
 
-    /*
-    QFile file("C:/Users/10694/Desktop/24小时计数法 - 副本.docx");
+/*
+    QFile file("C:/Users/10694/Desktop/abcdef.docx");
 
 
     if(!file.open(QIODevice::ReadOnly))
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
     file.close();
 
-    QFile file2("C:/Users/10694/Desktop/test/24小时计数法 - 副本.docx");
+    QFile file2("C:/Users/10694/Desktop/test/abcdef.docx");
 
     QByteArray byteArry(b64Content.toStdString().c_str());
 
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     byteArry = byteArry.fromBase64(byteArry);
 
     //qDebug()<<"\nmainDecodeArray:\n"<<byteArry;
-    qDebug()<<"\nmaintempArray:\n"<<temp;
+    //qDebug()<<"\nmaintempArray:\n"<<temp;
 
     if(!file2.open(QIODevice::WriteOnly))
     {
@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
     file2.write(temp);
     file2.close();
 
-
 */
+
 
 
 

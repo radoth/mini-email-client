@@ -1,4 +1,4 @@
-#include "pop3.h"
+﻿#include "pop3.h"
 
 RecvMail::RecvMail(User my)
 {
@@ -136,7 +136,11 @@ MIMEMail RecvMail::retr(int num)    //RETR命令
         }
 
     }
+    //qDebug()<<"\nfin:\n"<<QString::fromStdString(fin);
     MIMEMail back(fin);
+    //cout<<"\nfin:\n"<<fin;
+
+
     back.displayID = to_string(num);
 
     return back;
@@ -150,6 +154,7 @@ vector<MIMEMail> RecvMail::getMailList()    //获取所有邮件
 
 
     QStringList datFinal = QString::fromStdString(datAfter).split("\r\n");
+
     //vector<string> datFinal;
     //SplitString(datAfter, datFinal, "\r\n");    //字符串按行切割
     vector<MIMEMail> res;
