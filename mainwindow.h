@@ -7,7 +7,6 @@
 #include"mimemail.h"
 #include<QFileDialog>
 #include<QVector>
-#include"base64.h"
 #include"attachmentbutton.h"
 
 QT_BEGIN_NAMESPACE

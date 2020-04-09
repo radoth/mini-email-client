@@ -1,4 +1,4 @@
-#include "mimemail.h"
+﻿#include "mimemail.h"
 
 
 Mail::Mail()
@@ -9,6 +9,7 @@ Mail::Mail()
 Mail::Mail(string letter)
 {
     this->letter = letter;
+    //cout<<"\nfirstLetter:\n"<<this->letter;
 }
 
 
@@ -79,6 +80,7 @@ void Mail::FormatTheMessage()
 //带参构造函数，解码信件时调用
 MIMEMail::MIMEMail(string letter):Mail(letter)
 {
+    //cout<<"\nfirstLetter:\n"<<this->letter;
     DecodeTheMessage();
 
 }
@@ -246,9 +248,12 @@ void MIMEMail::append_mime_parts()
  {
      this->letter = letter;
      unfold();    //去折叠
+     //cout<<"\nfirstLetter:\n"<<this->letter;
      splitHeaderBody(); //分割文件头和文件尾
      headerAnalysis();    //分析信头
      bodyAnalysis();      //分析信体
+     //cout<<"text:"<<m_sMIMETextPlain<<endl;
+     //qDebug()<<"\ntextPlain:\n"<<QString::fromStdString(m_sMIMETextPlain);
  }
 
 
@@ -288,6 +293,7 @@ void MIMEMail::bodyAnalysis()
     QString qContentType = QString::fromStdString(m_sMIMEContentType).simplified();
     QString qContentEncode = QString::fromStdString(m_sMIMEEncode).simplified();
 
+
     //获取类型
     QString qType = qContentType.section(";",0,0);
 
@@ -304,6 +310,8 @@ void MIMEMail::bodyAnalysis()
     //获取内容
     QString qContent = QString::fromStdString(body).section("\r\n.\r\n",0,0);
 
+    //qDebug()<<"\nqContent:\n"<<qContent<<endl;
+
     int type = judgeMIMEType(qType);
 
     MIMEDecode(type,qTypeParam,qContentEncode,qContent);
@@ -314,6 +322,7 @@ void MIMEMail::bodyAnalysis()
 
 void MIMEMail::MIMEDecode(int type,QString qTypeParam,QString qContentEncode,QString qContent)
 {
+    //qDebug()<<"\ncontent:\n"<<qContent;
     switch (type) {
     case TEXT_PLAIN:
     {
@@ -347,6 +356,8 @@ void MIMEMail::MIMEDecode(int type,QString qTypeParam,QString qContentEncode,QSt
 void MIMEMail::decodeMIMEMulAlternative(QString qContent, QString qBoundary, QString qContentEncode)
 {
     //qDebug()<<"\nalter:\n"<<qContent;
+
+    //qDebug()<<"\nBound:\n"<<qBoundary;
 
     TextPlain text(TEXT_PLAIN);
     QString qTextPlain = splitMIMEPart(qContent,qBoundary).first();
@@ -428,10 +439,20 @@ QStringList MIMEMail::splitMIMEPart(QString content,QString qBoundary)
 
     QString tail = "--"+qBoundary+"--";
     QString partBoundary = "--"+qBoundary;
-    QString rmHeaderTailContent = content.section(partBoundary,1).section(tail,0,0);
+    QString rmHeaderTailContent = content.section(partBoundary,1);
+
+    //QString rmHeaderTailContent = content.section(partBoundary,1).section(tail,0,0);
+
+
+    QStringList list = rmHeaderTailContent.split(partBoundary);
+    //qDebug()<<"content:\n"<<content;
+
+
+    //qDebug()<<rmHeaderTailContent;
 
     foreach(QString part,rmHeaderTailContent.split(partBoundary))
     {
+        //qDebug()<<"\part:\n"<<part;
         result.push_back(part.trimmed());
     }
 
@@ -446,7 +467,7 @@ void MIMEMail::splitHeaderBody()
 {
     QString letter = QString::fromStdString(this->letter);
     //qDebug()<<"letter:"<<letter<<"\n\n";
-
+    //cout<<"\nletter:\n"<<this->letter;
 
     QString sep("\r\n\r\n");
     QString header = letter.section(sep,0,0);
@@ -477,8 +498,8 @@ void MIMEMail::unfold()    //字符串格式处理
     regex reg("\r\n\t");    //去除行折叠
     letter = regex_replace(letter, reg, "");
 
-    regex reg2("^[+-].*?\r\n");    //去除服务器状态信息
-    letter = regex_replace(letter, reg2, "");
+    //regex reg2("^[+-].*?\r\n");    //去除服务器状态信息
+    //letter = regex_replace(letter, reg2, "");
 
     //cout<<"\n\nletter:\n"<<letterAfter<<endl;
 }

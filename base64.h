@@ -1,4 +1,5 @@
-#pragma once
+﻿#pragma once
+#define WIN32_LEAN_AND_MEAN
 #include <string>
 #include <fstream>
 #include <windows.h>
@@ -15,3 +16,5 @@ bool QPEnCoding(string& aStr, bool &IsChanged);
 bool QPDeCoding(string& aStr, bool &IsChanged);
 
 string Decode_base64(const char* Data,int DataByte,int& OutByte);
+
+
