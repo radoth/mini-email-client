@@ -128,7 +128,7 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
 
     //qDebug()<<"\nuploadingContent:\n"<<content;
 
-    qDebug()<<"\nuploadingDecodeContent:\n"<<b64Content;
+    //qDebug()<<"\nuploadingDecodeContent:\n"<<b64Content;
 
 
     sDestination +=b64Content.toStdString();
@@ -136,7 +136,7 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
 
 
     /*--------------------------------------------*/
-
+/*
     QFile file2("C:/Users/10694/Desktop/test/abcdef.docx");
 
     QByteArray byteArry(b64Content.toStdString().c_str());
@@ -158,7 +158,7 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
 
 
 
-
+*/
 
     /*---------------------------------------------*/
 
@@ -199,7 +199,7 @@ void AppOctetStream:: DecodePart(QString szContent,QByteArray &sDestination)
 
 
 
-    qDebug()<<"\nloadDecodeContent:\n"<<byteArry;
+    //qDebug()<<"\nloadDecodeContent:\n"<<byteArry;
 
     QByteArray temp = byteArry.fromBase64(byteArry);
 
