@@ -2,7 +2,9 @@
 #include "pop3.h"
 #include <string>
 #include "mainwindow.h"
-#include <QMessageBox>
+#include"globaldialog.h"
+#include"jasonqt_showinformationmessageboxfromotherthread.h"
+
 void Update::run()
 {
     //User对象是pop3模块需要的
@@ -24,8 +26,16 @@ void Update::run()
     catch(...)
     {
         emit updateWrong();
+        //QMessageBox::critical(window,"更新失败","更新时发生严重错误。");
+        JasonQt_ShowInformationMessageBoxFromOtherThread::succeed=false;
+        JasonQt_ShowInformationMessageBoxFromOtherThread::show("更新失败", "更新时发生严重错误。");
         cout<<"\nERROR: A fatal error occurs during transmission.\n";
     }
+
+    //GlobalDialog *diag=new GlobalDialog();
+    //diag->setContent("更新成功","更新成功结束。",true);
+    JasonQt_ShowInformationMessageBoxFromOtherThread::succeed=true;
+    JasonQt_ShowInformationMessageBoxFromOtherThread::show("更新成功", "更新成功结束。");
     cout<<"\nUpdate Process Ended. \n";
     test2.quit();
 

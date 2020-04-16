@@ -19,6 +19,7 @@ class MainWindow : public QWidget
 
 protected:
     void closeEvent(QCloseEvent *event);
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -32,6 +33,7 @@ public:
     void delete_all_attachment();    //删除所有附件
     QString headerDecode(string destination,bool complete=false);    //信头解码
     void delete_all_load_attachment();  //删除所有下载附件
+    bool addCC=false;
 
           //下面几个字符串是重要的变量，所有收发邮件都要用到这些字符串
 string smtpServer;      //smtp服务器

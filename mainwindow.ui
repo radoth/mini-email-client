@@ -39,7 +39,7 @@ background-color: rgb(255, 255, 255);
 </string>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="welcome">
     <property name="styleSheet">
@@ -73,6 +73,12 @@ border-image: url(:/new/prefix1/image/mail.png);</string>
        <width>801</width>
        <height>81</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="font">
       <font>
@@ -160,6 +166,19 @@ border:none;
        <width>36</width>
        <height>36</height>
       </size>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_27">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>60</y>
+       <width>791</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>
@@ -2468,42 +2487,6 @@ background:transparent;
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QPushButton" name="addCC">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>0</y>
-        <width>191</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>微软雅黑</family>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton{
-border:none;
-}
-
-QPushButton:hover{
-	background-color: rgb(243, 243, 243);
-}
-
-</string>
-      </property>
-      <property name="text">
-       <string>添加抄送和密送</string>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>24</width>
-        <height>24</height>
-       </size>
-      </property>
-     </widget>
     </widget>
     <widget class="QPushButton" name="addAttachment">
      <property name="geometry">
@@ -2651,6 +2634,39 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
       </layout>
      </widget>
     </widget>
+    <widget class="QPushButton" name="addCC">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>130</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{
+border:none;
+background:transparent;
+}
+
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+    </widget>
     <zorder>layoutWidget</zorder>
     <zorder>label_30</zorder>
     <zorder>label_31</zorder>
@@ -2666,6 +2682,7 @@ QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
     <zorder>hideFrame</zorder>
     <zorder>addAttachment</zorder>
     <zorder>attachScrollArea</zorder>
+    <zorder>addCC</zorder>
    </widget>
    <widget class="QWidget" name="deleteMode">
     <property name="styleSheet">

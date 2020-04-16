@@ -1,4 +1,5 @@
-﻿#include "pop3.h"
+#include "pop3.h"
+#include"jasonqt_showinformationmessageboxfromotherthread.h"
 
 RecvMail::RecvMail(User my)
 {
@@ -195,6 +196,9 @@ string RecvMail::getResponse(Sock * mySock)    //获取响应结果
     {
         int errcode=WSAGetLastError();
         cout<<"Socket Transmission Error. WinSock2 ERROR CODE:"<<errcode<<endl<<endl;
+        //QMessageBox::critical(nullptr,"通信失败","套接字失败。错误代码："+QString::number(errcode));
+        JasonQt_ShowInformationMessageBoxFromOtherThread::succeed=false;
+        JasonQt_ShowInformationMessageBoxFromOtherThread::show("通信失败","套接字失败。错误代码："+QString::number(errcode));
         throw 1;
     };
 

@@ -4,7 +4,7 @@ QT       += sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
-CONFIG +=console
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -24,6 +24,8 @@ SOURCES += \
     attachmentbutton.cpp \
     base64.cpp \
     database.cpp \
+    globaldialog.cpp \
+    jasonqt_showinformationmessageboxfromotherthread.cpp \
     main.cpp \
     mainwindow.cpp \
     mimecontent.cpp \
@@ -39,6 +41,8 @@ HEADERS += \
     attachmentbutton.h \
     base64.h \
     database.h \
+    globaldialog.h \
+    jasonqt_showinformationmessageboxfromotherthread.h \
     mainwindow.h \
     mimecontent.h \
     mimemail.h \
@@ -49,7 +53,10 @@ HEADERS += \
     update.h
 
 FORMS += \
+    globaldialog.ui \
     mainwindow.ui
+
+RC_ICONS = icon.ico
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

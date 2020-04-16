@@ -27,15 +27,12 @@ signals:
 private:
     QMenu *m_menu;
     QAction *m_actionOne;
-    //QAction *m_actionTwo;
-    //QAction *m_actionThree;
+
     QString fileName;
     QString filePath;
 
 protected slots:
     void actionOneSlot();
-    //void actionTwoSlot();
-    //void actionThreeSlot();
 
 };
 

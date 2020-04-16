@@ -1,4 +1,4 @@
-﻿#include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<QGraphicsDropShadowEffect>
 #include<QMouseEvent>
@@ -6,12 +6,11 @@
 #include"update.h"
 #include<QDebug>
 #include"smtp.h"
-#include<QMessageBox>
 #include <QCloseEvent>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
 #include"base64.h"
-
+#include"jasonqt_showinformationmessageboxfromotherthread.h"
 
 void MainWindow::closeEvent(QCloseEvent *event) //关闭窗口事件
 {
@@ -123,6 +122,8 @@ MainWindow::MainWindow(QWidget *parent)
     animation(ui->label_2);
 
     loadAccount();
+
+    ui->draft->hide();
 }
 
 MainWindow::~MainWindow()
@@ -290,7 +291,8 @@ void MainWindow::on_UpdateDone()    //在更新邮件操作完成后
         //qDebug()<<QString::fromStdString((*i).subject).toUtf8();
         ui->mailList->setItemWidget(item3,0,createItem(headerDecode((*i).subject),QString::fromLocal8Bit((*i).date.c_str())+"     "+headerDecode((*i).from),QString::fromStdString((*i).displayID)));
     }
-    QMessageBox::information(NULL, "提示.", "刷新成功     .");
+    //QMessageBox::information(NULL, "提示.", "刷新成功     .");
+
 
     //下面写入数据库
     account.insert(QString::fromStdString(mailAddress),QString::fromStdString(userName),QString::fromStdString(password),QString::fromStdString(smtpServer),stoi(smtpPort.c_str()),QString::fromStdString(pop3Server),stoi(pop3Port.c_str()));
@@ -311,7 +313,7 @@ void MainWindow::on_UpdateWrong()    //更新出错
     ui->toMainPage->setEnabled(true);
     ui->refresh->setEnabled(true);
     ui->refresh_2->setEnabled(true);
-    QMessageBox::critical(NULL, "错误.", "传输过程出错。请重试     .");
+    //QMessageBox::critical(NULL, "错误.", "传输过程出错。请重试     .");
 }
 
 void MainWindow::UpdateLetter()    //更新所有邮件
@@ -363,12 +365,12 @@ void MainWindow::animation(QWidget *o)
         o->setGraphicsEffect(m_pGraphicsOpacityEffect1);
 
     QPropertyAnimation *anime3=new QPropertyAnimation(m_pGraphicsOpacityEffect1,"opacity");
-        anime3->setDuration(2000);
+        anime3->setDuration(1000);
         anime3->setStartValue(0);
         //anime3->setKeyValueAt(0.5,1);
+        //anime3->setKeyValueAt(0.03,1);
         anime3->setEndValue(1);
         anime3->setEasingCurve(QEasingCurve::OutSine);
-        anime3->setLoopCount(1);
         anime3->start();
 }
 
@@ -557,7 +559,7 @@ void MainWindow::on_send_clicked()    //发送按钮
     //cout<<test.body<<endl;
 
         //ui->send->setText(QString::fromLocal8Bit("正在发送..."));
-    QMessageBox::information(this, QString::fromLocal8Bit("Tips"), QString::fromLocal8Bit("Sending..."));
+    //QMessageBox::information(this, QString::fromLocal8Bit("Tips"), QString::fromLocal8Bit("Sending..."));
             //准备完毕，发送
     SendMail my;
         //try{
@@ -690,8 +692,17 @@ void MainWindow::on_close_clicked()     //右上角按钮
 
 void MainWindow::on_addCC_clicked()
 {
-    ui->addCC->hide();
-    ui->hideFrame->hide();
+    if(addCC==false)
+    {
+        addCC=true;
+        ui->hideFrame->hide();
+    }
+    else{
+        addCC=false;
+        ui->WriteCC->clear();
+        ui->WriteBcc->clear();
+        ui->hideFrame->setVisible(true);
+    }
 }
 
 void MainWindow::on_accountList_itemDoubleClicked(QListWidgetItem *item)
@@ -750,7 +761,9 @@ void MainWindow::on_addAttachment_clicked()
         //附件大小不得超过50kb
         if(sizekb>50)
         {
-            QMessageBox::information(NULL, "提示", "附件大小不能超过50kb!",QMessageBox::Yes);
+            //QMessageBox::information(NULL, "提示", "附件大小不能超过50kb!",QMessageBox::Yes);
+            JasonQt_ShowInformationMessageBoxFromOtherThread::succeed=false;
+            JasonQt_ShowInformationMessageBoxFromOtherThread::show("提示", "附件大小不能超过50kb!");
             return;
         }
 
@@ -1028,4 +1041,3 @@ void MainWindow::delete_all_load_attachment()
     //}
 
 }
-

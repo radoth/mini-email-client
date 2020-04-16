@@ -20,6 +20,8 @@
         <file>image/account.png</file>
         <file>image/attach.png</file>
         <file>image/file.png</file>
+        <file>image/fail.png</file>
+        <file>image/succeed.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

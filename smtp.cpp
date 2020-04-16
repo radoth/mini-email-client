@@ -1,12 +1,15 @@
 #include "smtp.h"
 #include "mimemail.h"
+#include"jasonqt_showinformationmessageboxfromotherthread.h"
 
 bool SendMail::sendMail(MIMEMail my)    //发送一封邮件
 {
     try {
         cout << "The mail is begin sent..." << endl;
         sendAMail(my);
-        cout << "Mail sent successfully." << endl;
+        JasonQt_ShowInformationMessageBoxFromOtherThread::succeed=true;
+        JasonQt_ShowInformationMessageBoxFromOtherThread::show("发送成功","您的邮件发送成功");
+        //QMessageBox::information(nullptr,"发送成功","您的邮件发送成功");
         return true;
     }
 
@@ -14,6 +17,9 @@ bool SendMail::sendMail(MIMEMail my)    //发送一封邮件
     {
         cout<<"Oops! An SMTP error occurs."<<endl;
         cout<<"SMTP errCode:"<<err<<endl;
+        //QMessageBox::critical(nullptr,"发送失败","发送失败，SMTP错误码："+QString::number(err));
+        JasonQt_ShowInformationMessageBoxFromOtherThread::succeed=false;
+        JasonQt_ShowInformationMessageBoxFromOtherThread::show("发送失败","发送失败，SMTP错误码："+QString::number(err));
         return false;
     }
 

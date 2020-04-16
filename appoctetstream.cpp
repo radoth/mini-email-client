@@ -1,4 +1,4 @@
-﻿#include "appoctetstream.h"
+#include "appoctetstream.h"
 
 
 AppOctetStream::AppOctetStream( int nContentType )
@@ -112,55 +112,11 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
     if( pFileAtt == NULL )
         return;
 
-    //注释掉的方法上传的文件无法打开
-    /*QByteArray content;
-    while(!pFileAtt->atEnd())
-    {
-        QByteArray temp = pFileAtt->readLine();
-
-        QString sTemp = temp.toBase64();
-        sDestination +=sTemp.toStdString();
-
-    }*/
-
     QByteArray content =  pFileAtt->readAll();
     QString b64Content = content.toBase64();
 
-    //qDebug()<<"\nuploadingContent:\n"<<content;
-
-    //qDebug()<<"\nuploadingDecodeContent:\n"<<b64Content;
-
 
     sDestination +=b64Content.toStdString();
-    //qDebug()<<"\n\nbodysize:\n"<<sDestination.size()<<"\n";
-
-
-    /*--------------------------------------------*/
-/*
-    QFile file2("C:/Users/10694/Desktop/test/abcdef.docx");
-
-    QByteArray byteArry(b64Content.toStdString().c_str());
-
-    //qDebug()<<"\nbyteArry:\n"<<byteArry;
-
-    QByteArray temp = byteArry.fromBase64(byteArry);
-    byteArry = byteArry.fromBase64(byteArry);
-
-    //qDebug()<<"\nuploading-load:\n"<<temp;
-    //qDebug()<<"\nmaintempArray:\n"<<temp;
-
-    if(!file2.open(QIODevice::WriteOnly))
-    {
-    }
-
-    file2.write(temp);
-    file2.close();
-
-
-
-*/
-
-    /*---------------------------------------------*/
 
 
     sDestination +=  "\r\n" ;
@@ -174,32 +130,9 @@ void AppOctetStream::attach_file(QFile* pFileAtt,
 void AppOctetStream:: DecodePart(QString szContent,QByteArray &sDestination)
 {
     split_header(szContent);
-    //qDebug()<<"\n\nMulMIXED!!\n\n";
-    //QString c = QString::fromStdString(content);
 
-
-
-    //qDebug()<<"\n\nunDecodefileName:\n"<<QString::fromStdString(fileName)<<endl;
-    //qDebug()<<"unDecodefileData:\n"<<QString::fromStdString(content)<<endl;
-
-
-    //regex reg("\r\n\t");    //去除行折叠
-    //content = regex_replace(content, reg, "");
-    //qDebug()<<"\nrmSpace:\n"<<QString::fromStdString(content);
-
-    //QByteArray temp;
     QByteArray byteArry(content.c_str());
 
-    //qDebug()<<"\nDecodePartbyteArry:\n"<<byteArry;
-
-    //temp = byteArry.fromBase64(byteArry);
-
-    //qDebug()<<"\nbyteArry:\n"<<temp;
-
-
-
-
-    //qDebug()<<"\nloadDecodeContent:\n"<<byteArry;
 
     QByteArray temp = byteArry.fromBase64(byteArry);
 
@@ -207,13 +140,6 @@ void AppOctetStream:: DecodePart(QString szContent,QByteArray &sDestination)
 
     sDestination = temp;
 
-    //int a =6;
-    //cout<<"\ncharContent:\n"<<content.c_str()<<endl;
-    //cout<<"\ndecodeContent:\n"<<Decode_base64(content.c_str(),content.length(),a)<<endl;
-
-    //sDestination = base64_decode(content.c_str());
-    //qDebug()<<"\nDecodefileData:\n"<<QString::fromStdString(sDestination);
-    //qDebug()<<"\nDecodefileData:\n"<<a;
 }
 
 
@@ -251,8 +177,7 @@ void AppOctetStream:: split_header(QString szContent)
         }
     }
 
-    //qDebug()<<"contentType:"<<qContentType;
-    //qDebug()<<"contentEncode:"<<qContentEncode;
+
 
 
     //获取类型
@@ -267,9 +192,7 @@ void AppOctetStream:: split_header(QString szContent)
 
     //文件名解码
     file_name_decode(qFileName);
-    //qDebug()<<"\n\nunDecodefileName:\n"<<qFileName<<endl;
-    //qDebug()<<"\n\nunTransfileData:\n"<<qContentAppOct<<endl;
-    //qDebug()<<"encode:"<<qContentEncode;
+
 
     qContentAppOct = qContentAppOct.remove("\r\n");
 
