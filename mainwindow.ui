@@ -39,7 +39,7 @@ background-color: rgb(255, 255, 255);
 </string>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="welcome">
     <property name="styleSheet">
@@ -980,7 +980,10 @@ border:2px solid grey;</string>
          </font>
         </property>
         <property name="text">
-         <string>wuxuhuidalao!</string>
+         <string/>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
         </property>
        </widget>
       </item>
@@ -1062,7 +1065,7 @@ border:2px solid grey;</string>
          </font>
         </property>
         <property name="text">
-         <string>2017301390114</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -1126,7 +1129,7 @@ border:2px solid grey;</string>
          </font>
         </property>
         <property name="text">
-         <string>2017301390114@whu.edu.cn</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -2749,7 +2752,7 @@ background:transparent;
       <rect>
        <x>100</x>
        <y>60</y>
-       <width>431</width>
+       <width>571</width>
        <height>21</height>
       </rect>
      </property>
